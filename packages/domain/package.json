@@ -1,0 +1,19 @@
+{
+  "name": "@wdsc/domain",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@wdsc/tsconfig": "workspace:*",
+    "typescript": "^5.9.3"
+  }
+}

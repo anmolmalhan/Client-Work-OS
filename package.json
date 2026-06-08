@@ -1,0 +1,22 @@
+{
+  "name": "whatsapp-digital-service-center",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "api/*",
+    "web/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "check": "turbo check",
+    "db:generate": "turbo db:generate --filter=@wdsc/db",
+    "db:migrate": "turbo db:migrate --filter=@wdsc/db"
+  },
+  "devDependencies": {
+    "turbo": "^2.9.16",
+    "typescript": "^5.9.3"
+  },
+  "packageManager": "bun@1.3.14"
+}

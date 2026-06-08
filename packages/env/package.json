@@ -1,0 +1,20 @@
+{
+  "name": "@wdsc/env",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    "./api-hono": "./src/api-hono.ts",
+    "./db": "./src/db.ts",
+    "./web-next": "./src/web-next.ts"
+  },
+  "dependencies": {
+    "@t3-oss/env-core": "^0.13.11",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@wdsc/tsconfig": "workspace:*",
+    "typescript": "^5.9.3"
+  }
+}

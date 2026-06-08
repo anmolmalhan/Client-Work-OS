@@ -1,0 +1,8 @@
+{
+  "extends": "@wdsc/tsconfig/base.json",
+  "compilerOptions": {
+    "types": ["bun"],
+    "outDir": "dist"
+  },
+  "include": ["src"]
+}
