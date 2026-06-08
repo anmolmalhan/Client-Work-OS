@@ -1,7 +1,7 @@
 {
   "extends": "@wdsc/tsconfig/base.json",
   "compilerOptions": {
-    "types": ["bun"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "outDir": "dist"
   },
   "include": ["src"]
