@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { apiEnv } from "@wdsc/env/api-hono";
+import { apiEnv } from "../../../packages/env/src/api-hono";
 import { healthRouter } from "./routers/health";
 import { v1Router } from "./routers/v1";
 

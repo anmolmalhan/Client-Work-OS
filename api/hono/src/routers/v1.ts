@@ -17,7 +17,7 @@ import {
   trackRequestSchema,
   updateRequestStatusSchema,
   type ClientRequest,
-} from "@wdsc/domain";
+} from "../../../../packages/domain/src";
 
 const requestStore: ClientRequest[] = requests.map((request) => ({
   ...request,
