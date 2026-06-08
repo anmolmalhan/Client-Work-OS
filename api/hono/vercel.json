@@ -1,0 +1,5 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "cd ../.. && npx bun@1.3.4 install",
+  "buildCommand": "cd ../.. && npx bun@1.3.4 run --filter @wdsc/api-hono build"
+}
