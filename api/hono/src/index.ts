@@ -4,7 +4,7 @@ import { apiEnv } from "@wdsc/env/api-hono";
 import { healthRouter } from "./routers/health";
 import { v1Router } from "./routers/v1";
 
-const app = new Hono();
+export const app = new Hono();
 
 app.use(
   "*",
