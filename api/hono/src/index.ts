@@ -19,13 +19,18 @@ app.route("/api/v1", v1Router);
 
 app.notFound((c) => c.json({ error: "Route not found." }, 404));
 app.onError((error, c) => {
-  console.error(error);
+  void error;
   return c.json({ error: "Unexpected server error." }, 500);
 });
 
 export type AppType = typeof app;
 
+function getPort(appUrl: string) {
+  const explicitPort = appUrl.match(/:(\d+)(?:\/|$)/)?.[1];
+  return Number(explicitPort ?? 4100);
+}
+
 export default {
-  port: Number(new URL(apiEnv.HONO_APP_URL).port || 4100),
+  port: getPort(apiEnv.HONO_APP_URL),
   fetch: app.fetch,
 };
