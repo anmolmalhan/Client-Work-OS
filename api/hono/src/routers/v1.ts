@@ -37,6 +37,22 @@ function trackStoredRequest(requestId: string, whatsappNumber: string) {
 }
 
 export const v1Router = new Hono()
+  .get("/", (c) =>
+    c.json({
+      ok: true,
+      version: "v1",
+      endpoints: {
+        business: "/api/v1/business",
+        services: "/api/v1/services",
+        pricing: "/api/v1/pricing",
+        faq: "/api/v1/faq",
+        whatsapp: "/api/v1/whatsapp",
+        dashboard: "/api/v1/dashboard",
+        requests: "/api/v1/requests",
+        track: "/api/v1/track",
+      },
+    }),
+  )
   .get("/business", (c) => c.json({ data: businessProfile }))
   .get("/services", (c) => c.json({ data: services }))
   .get("/services/:serviceId", (c) => {

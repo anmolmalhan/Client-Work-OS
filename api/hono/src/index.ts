@@ -6,6 +6,20 @@ import { v1Router } from "./routers/v1";
 
 export const app = new Hono();
 
+const apiInfo = {
+  ok: true,
+  service: "whatsapp-digital-service-center-api",
+  endpoints: {
+    health: "/health",
+    api: "/api/v1",
+    business: "/api/v1/business",
+    services: "/api/v1/services",
+    pricing: "/api/v1/pricing",
+    requests: "/api/v1/requests",
+    track: "/api/v1/track",
+  },
+};
+
 app.use(
   "*",
   cors({
@@ -14,6 +28,7 @@ app.use(
   }),
 );
 
+app.get("/", (c) => c.json(apiInfo));
 app.route("/health", healthRouter);
 app.route("/api/v1", v1Router);
 
