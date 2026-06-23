@@ -13,7 +13,7 @@ export default function ContactPage() {
           title="WhatsApp is the main support channel"
           description="Send details, documents, payment confirmations, and delivery questions through WhatsApp for the fastest response."
         />
-        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} external>
+        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" external>
           WhatsApp Button
         </ActionButton>
       </div>
@@ -21,20 +21,20 @@ export default function ContactPage() {
         <section className="rounded-lg border border-[var(--line)] bg-white p-5 shadow-sm">
           <h2 className="text-lg font-bold">Business details</h2>
           <div className="mt-4 grid gap-3 text-sm">
-            <a className="flex items-center gap-3 rounded-md bg-[#f5f8f6] p-3 font-semibold hover:text-[var(--action-dark)]" href={getBusinessWhatsappLink()} target="_blank" rel="noreferrer">
-              <MessageCircle className="size-5 text-[var(--action)]" aria-hidden="true" />
+            <a className="flex items-center gap-3 rounded-md border border-[var(--line)] bg-slate-50 p-3 font-semibold hover:text-[var(--whatsapp-dark)]" href={getBusinessWhatsappLink()} target="_blank" rel="noreferrer">
+              <MessageCircle className="size-5 text-[var(--whatsapp)]" aria-hidden="true" />
               WhatsApp: {businessProfile.whatsappNumber}
             </a>
-            <a className="flex items-center gap-3 rounded-md bg-[#f5f8f6] p-3 font-semibold hover:text-[var(--action-dark)]" href={`tel:${businessProfile.phone}`}>
-              <Phone className="size-5 text-[var(--action)]" aria-hidden="true" />
+            <a className="flex items-center gap-3 rounded-md border border-[var(--line)] bg-slate-50 p-3 font-semibold hover:text-[var(--trust-dark)]" href={`tel:${businessProfile.phone}`}>
+              <Phone className="size-5 text-[var(--trust)]" aria-hidden="true" />
               Phone: {businessProfile.phone}
             </a>
-            <a className="flex items-center gap-3 rounded-md bg-[#f5f8f6] p-3 font-semibold hover:text-[var(--action-dark)]" href={`mailto:${businessProfile.email}`}>
-              <Mail className="size-5 text-[var(--action)]" aria-hidden="true" />
+            <a className="flex items-center gap-3 rounded-md border border-[var(--line)] bg-slate-50 p-3 font-semibold hover:text-[var(--trust-dark)]" href={`mailto:${businessProfile.email}`}>
+              <Mail className="size-5 text-[var(--trust)]" aria-hidden="true" />
               Email: {businessProfile.email}
             </a>
-            <p className="flex items-center gap-3 rounded-md bg-[#f5f8f6] p-3 font-semibold">
-              <Timer className="size-5 text-[var(--action)]" aria-hidden="true" />
+            <p className="flex items-center gap-3 rounded-md border border-[var(--line)] bg-slate-50 p-3 font-semibold">
+              <Timer className="size-5 text-[var(--trust)]" aria-hidden="true" />
               {businessProfile.workingHours}
             </p>
           </div>

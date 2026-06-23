@@ -14,7 +14,7 @@ export default function ServicesPage() {
           title="Everything clients can request remotely"
           description="Only digital and online support services are offered. Printing, lamination, photocopying, and public PC usage are intentionally excluded."
         />
-        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} external>
+        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" external>
           Send on WhatsApp
         </ActionButton>
       </div>

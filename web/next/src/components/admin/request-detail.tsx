@@ -1,22 +1,25 @@
-import { getRequestWhatsappLink, paymentStatusLabels, requestStatusLabels, type ClientRequest } from "@wdsc/domain";
-import { CalendarClock, FileCheck2, FileUp, IndianRupee, MessageCircle, Phone, ShieldCheck, StickyNote, UploadCloud } from "lucide-react";
+import { getRequestWhatsappLink, paymentStatusLabels, requestStatusLabels, type ClientRequest, type RequestStatus } from "@wdsc/domain";
+import { CalendarClock, CheckCircle2, FileCheck2, FileUp, IndianRupee, MessageCircle, Phone, ShieldCheck, StickyNote, UploadCloud } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { ActionButton } from "@/components/marketing/action-button";
 import { PaymentBadge, StatusBadge } from "@/components/marketing/status-badge";
 import { formatDate, formatDateTime } from "@/lib/format";
 
 export function RequestDetail({ request }: { request: ClientRequest }) {
   const paidPercent = request.payment.totalAmount > 0 ? Math.min(100, Math.round((request.payment.paidAmount / request.payment.totalAmount) * 100)) : 0;
+  const timeline: RequestStatus[] = ["request_received", "details_pending", "payment_pending", "in_progress", "completed", "delivered"];
+  const activeIndex = Math.max(0, timeline.indexOf(request.status));
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
       <section className="color-strip rounded-lg border border-[var(--line)] bg-white p-5 pt-6 shadow-sm">
-        <div className="rounded-lg border border-[#b8f3df] bg-[#effff9] p-5">
+        <div className="rounded-lg border border-blue-100 bg-blue-50 p-5">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p className="text-sm font-bold uppercase text-[var(--action-dark)]">{request.requestId}</p>
+              <p className="text-sm font-bold uppercase text-[var(--trust-dark)]">{request.requestId}</p>
               <h1 className="mt-1 text-3xl font-bold leading-tight">{request.clientName}</h1>
               <p className="mt-2 flex items-center gap-2 text-sm font-semibold text-[var(--muted)]">
-                <Phone className="size-4 text-[var(--action-dark)]" aria-hidden="true" />
+                <Phone className="size-4 text-[var(--trust)]" aria-hidden="true" />
                 {request.whatsappNumber}
               </p>
             </div>
@@ -29,6 +32,7 @@ export function RequestDetail({ request }: { request: ClientRequest }) {
             <MiniMetric icon={FileCheck2} label="Service" value={request.serviceName} />
             <MiniMetric icon={CalendarClock} label="Deadline" value={formatDate(request.deadline)} />
             <MiniMetric icon={IndianRupee} label="Balance" value={`Rs ${request.payment.balanceAmount}`} />
+            <MiniMetric icon={ShieldCheck} label="Priority" value={request.urgency === "urgent" ? "High priority" : "Normal"} />
           </div>
         </div>
 
@@ -39,25 +43,39 @@ export function RequestDetail({ request }: { request: ClientRequest }) {
           <InfoBlock label="Paid amount" value={`Rs ${request.payment.paidAmount}`} tone="coral" />
         </div>
 
-        <div className="mt-5 rounded-lg border border-[#eadfcd] bg-[#fffdf7] p-4">
+        <div className="mt-5 rounded-lg border border-[var(--line)] bg-slate-50 p-4">
           <div className="flex items-center justify-between gap-4">
             <p className="text-sm font-bold">Payment progress</p>
-            <p className="text-sm font-bold text-[var(--action-dark)]">{paidPercent}% paid</p>
+            <p className="text-sm font-bold text-[var(--trust-dark)]">{paidPercent}% paid</p>
           </div>
-          <div className="mt-3 h-3 overflow-hidden rounded-full bg-[#f0e5cf]">
-            <div className="h-full rounded-full bg-[var(--action)]" style={{ width: `${paidPercent}%` }} />
+          <div className="mt-3 h-3 overflow-hidden rounded-full bg-white">
+            <div className="status-fill h-full rounded-full bg-[var(--trust)]" style={{ width: `${paidPercent}%` }} />
+          </div>
+        </div>
+
+        <div className="mt-5 rounded-lg border border-[var(--line)] bg-white p-4">
+          <h2 className="text-lg font-bold">Status timeline</h2>
+          <div className="mt-4 grid gap-3">
+            {timeline.map((status, index) => (
+              <div className="flex items-center gap-3" key={status}>
+                <span className={`inline-flex size-7 shrink-0 items-center justify-center rounded-full ring-1 ${index <= activeIndex ? "bg-blue-50 text-[var(--trust)] ring-blue-100" : "bg-slate-50 text-[var(--muted)] ring-[var(--line)]"}`}>
+                  <CheckCircle2 className="size-4" aria-hidden="true" />
+                </span>
+                <p className={`text-sm font-semibold ${index <= activeIndex ? "text-[var(--foreground)]" : "text-[var(--muted)]"}`}>{requestStatusLabels[status]}</p>
+              </div>
+            ))}
           </div>
         </div>
 
         <div className="mt-6">
           <h2 className="text-lg font-bold">Work description</h2>
-          <p className="mt-2 rounded-md border border-[var(--line)] bg-[#fffdf7] p-4 text-sm leading-6 text-[var(--muted)]">{request.description}</p>
+          <p className="mt-2 rounded-md border border-[var(--line)] bg-slate-50 p-4 text-sm leading-6 text-[var(--muted)]">{request.description}</p>
         </div>
 
         <div className="mt-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="text-lg font-bold">Uploaded documents</h2>
-            <span className="inline-flex items-center gap-2 rounded-full bg-[#dcfff3] px-3 py-1 text-xs font-bold text-[var(--action-dark)]">
+            <span className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-[var(--trust-dark)]">
               <ShieldCheck className="size-4" aria-hidden="true" />
               Sensitive files marked
             </span>
@@ -66,7 +84,7 @@ export function RequestDetail({ request }: { request: ClientRequest }) {
             {request.documents.map((document) => (
               <div className="rounded-md border border-[var(--line)] bg-white p-3 shadow-sm" key={document.id}>
                 <p className="flex items-center gap-2 text-sm font-bold">
-                  <FileUp className="size-4 text-[var(--action-dark)]" aria-hidden="true" />
+                  <FileUp className="size-4 text-[var(--trust)]" aria-hidden="true" />
                   {document.name}
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
@@ -86,7 +104,7 @@ export function RequestDetail({ request }: { request: ClientRequest }) {
           <div className="mt-4 grid gap-3">
             <label className="grid gap-2 text-sm font-semibold">
               Update request status
-              <select className="focus-ring min-h-11 rounded-md border border-[var(--line)] bg-[#fffdf7] px-3" defaultValue={request.status}>
+              <select className="focus-ring min-h-11 rounded-md border border-[var(--line)] bg-white px-3" defaultValue={request.status}>
                 {Object.entries(requestStatusLabels).map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}
@@ -96,7 +114,7 @@ export function RequestDetail({ request }: { request: ClientRequest }) {
             </label>
             <label className="grid gap-2 text-sm font-semibold">
               Payment status
-              <select className="focus-ring min-h-11 rounded-md border border-[var(--line)] bg-[#fffdf7] px-3" defaultValue={request.payment.status}>
+              <select className="focus-ring min-h-11 rounded-md border border-[var(--line)] bg-white px-3" defaultValue={request.payment.status}>
                 {Object.entries(paymentStatusLabels).map(([value, label]) => (
                   <option key={value} value={value}>
                     {label}
@@ -106,16 +124,16 @@ export function RequestDetail({ request }: { request: ClientRequest }) {
             </label>
             <label className="grid gap-2 text-sm font-semibold">
               Add service price
-              <input className="focus-ring min-h-11 rounded-md border border-[var(--line)] bg-[#fffdf7] px-3" defaultValue={request.payment.totalAmount} inputMode="numeric" />
+              <input className="focus-ring min-h-11 rounded-md border border-[var(--line)] bg-white px-3" defaultValue={request.payment.totalAmount} inputMode="numeric" />
             </label>
             <label className="grid gap-2 text-sm font-semibold">
-              Upload final receipt or file
-              <span className="flex min-h-11 items-center gap-2 rounded-md border border-dashed border-[#b8f3df] bg-[#effff9] px-3 text-sm text-[var(--muted)]">
+              Upload delivery proof
+              <span className="flex min-h-11 items-center gap-2 rounded-md border border-dashed border-blue-200 bg-blue-50 px-3 text-sm text-[var(--muted)]">
                 <UploadCloud className="size-5" aria-hidden="true" />
                 <input className="w-full text-sm" type="file" />
               </span>
             </label>
-            <ActionButton href={getRequestWhatsappLink(request)} icon={MessageCircle} external>
+            <ActionButton href={getRequestWhatsappLink(request)} icon={MessageCircle} variant="whatsapp" external>
               Send WhatsApp Update
             </ActionButton>
           </div>
@@ -128,16 +146,22 @@ export function RequestDetail({ request }: { request: ClientRequest }) {
           </h2>
           <div className="mt-3 space-y-2">
             {request.adminNotes.map((note) => (
-              <p className="rounded-md border border-[#eadfcd] bg-[#fffdf7] p-3 text-sm text-[var(--muted)]" key={note}>
+              <p className="rounded-md border border-[var(--line)] bg-slate-50 p-3 text-sm text-[var(--muted)]" key={note}>
                 {note}
               </p>
             ))}
           </div>
-          <textarea className="focus-ring mt-3 min-h-24 w-full rounded-md border border-[var(--line)] bg-[#fffdf7] px-3 py-3 text-sm" placeholder="Add internal note" />
+          <textarea className="focus-ring mt-3 min-h-24 w-full rounded-md border border-[var(--line)] bg-white px-3 py-3 text-sm" placeholder="Add internal note" />
         </section>
 
-        <section className="rounded-lg border border-[#b8f3df] bg-[#effff9] p-5 shadow-sm">
-          <h2 className="text-lg font-bold">Delivery</h2>
+        <section className="rounded-lg border border-[var(--line)] bg-white p-5 shadow-sm">
+          <h2 className="text-lg font-bold">Client-visible note</h2>
+          <textarea className="focus-ring mt-3 min-h-24 w-full rounded-md border border-[var(--line)] bg-white px-3 py-3 text-sm" defaultValue={request.latestUpdate} />
+          <p className="mt-2 text-xs font-semibold text-[var(--muted)]">This note should be safe for the client to read on the tracking page or WhatsApp update.</p>
+        </section>
+
+        <section className="rounded-lg border border-blue-100 bg-blue-50 p-5 shadow-sm">
+          <h2 className="text-lg font-bold">Delivery proof</h2>
           <div className="mt-3 space-y-2 text-sm text-[var(--muted)]">
             <p>Final output: {request.finalOutputFile ?? "Not uploaded yet"}</p>
             <p>Confirmation: {request.deliveryConfirmation ?? "Pending"}</p>
@@ -150,10 +174,10 @@ export function RequestDetail({ request }: { request: ClientRequest }) {
 }
 
 const infoTones = {
-  mint: "border-[#b8f3df] bg-[#effff9]",
-  sun: "border-[#f3df9b] bg-[#fff7dc]",
-  sky: "border-[#bde8ff] bg-[#eef9ff]",
-  coral: "border-[#ffc3b5] bg-[#fff0eb]",
+  mint: "border-green-100 bg-green-50",
+  sun: "border-amber-100 bg-amber-50",
+  sky: "border-blue-100 bg-blue-50",
+  coral: "border-slate-200 bg-slate-50",
 };
 
 function InfoBlock({ label, value, tone = "mint" }: { label: string; value: string; tone?: keyof typeof infoTones }) {
@@ -165,11 +189,11 @@ function InfoBlock({ label, value, tone = "mint" }: { label: string; value: stri
   );
 }
 
-function MiniMetric({ icon: Icon, label, value }: { icon: typeof FileCheck2; label: string; value: string }) {
+function MiniMetric({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
   return (
     <div className="rounded-md bg-white p-3 shadow-sm">
       <p className="flex items-center gap-2 text-xs font-bold uppercase text-[var(--muted)]">
-        <Icon className="size-4 text-[var(--action-dark)]" aria-hidden="true" />
+        <Icon className="size-4 text-[var(--trust)]" aria-hidden="true" />
         {label}
       </p>
       <p className="mt-1 text-sm font-bold">{value}</p>
@@ -178,5 +202,5 @@ function MiniMetric({ icon: Icon, label, value }: { icon: typeof FileCheck2; lab
 }
 
 function DocBadge({ children }: { children: React.ReactNode }) {
-  return <span className="rounded-full bg-[#dcfff3] px-2.5 py-1 text-xs font-bold capitalize text-[var(--action-dark)]">{children}</span>;
+  return <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold capitalize text-[var(--trust-dark)]">{children}</span>;
 }

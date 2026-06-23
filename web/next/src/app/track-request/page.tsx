@@ -13,7 +13,7 @@ export default function TrackRequestPage() {
           title="Check current work status"
           description="Clients can check status using Request ID and WhatsApp number. Demo data is included for MVP testing."
         />
-        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} external>
+        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" external>
           Ask on WhatsApp
         </ActionButton>
       </div>

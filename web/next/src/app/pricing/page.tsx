@@ -13,7 +13,7 @@ export default function PricingPage() {
           title="Simple pricing with final confirmation after checking documents"
           description="Fixed services have direct prices. Forms, submissions, account support, and urgent work are quoted after checking complexity."
         />
-        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} external>
+        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" external>
           Confirm Price on WhatsApp
         </ActionButton>
       </div>
@@ -26,8 +26,8 @@ export default function PricingPage() {
         <h2 className="text-lg font-bold">Payment workflow</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-4">
           {["Client sends request", "Documents are checked", "Final price is confirmed", "Payment is marked pending, partial, or paid"].map((item, index) => (
-            <div className="rounded-md bg-[#f5f8f6] p-4" key={item}>
-              <span className="text-sm font-bold text-[var(--action-dark)]">Step {index + 1}</span>
+            <div className="rounded-md border border-[var(--line)] bg-slate-50 p-4" key={item}>
+              <span className="text-sm font-bold text-[var(--trust-dark)]">Step {index + 1}</span>
               <p className="mt-2 text-sm font-semibold">{item}</p>
             </div>
           ))}

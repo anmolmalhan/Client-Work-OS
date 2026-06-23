@@ -6,14 +6,16 @@ type ActionButtonProps = {
   href: string;
   children: React.ReactNode;
   icon?: LucideIcon;
-  variant?: "primary" | "secondary" | "ghost";
+  variant?: "primary" | "whatsapp" | "secondary" | "ghost" | "navy";
   external?: boolean;
 };
 
 const variants = {
-  primary: "bg-[var(--action)] text-white shadow-[0_12px_26px_rgba(16,163,127,0.24)] hover:bg-[var(--action-dark)]",
-  secondary: "border border-[var(--line)] bg-white text-[var(--foreground)] shadow-sm hover:border-[var(--action)] hover:bg-[#f1fff9] hover:text-[var(--action-dark)]",
-  ghost: "text-[var(--action-dark)] hover:bg-[#dcfff3]",
+  primary: "bg-[var(--trust)] text-white shadow-[0_12px_26px_rgba(37,99,235,0.22)] hover:bg-[var(--trust-dark)]",
+  whatsapp: "bg-[var(--whatsapp)] text-white shadow-[0_12px_26px_rgba(34,197,94,0.22)] hover:bg-[var(--whatsapp-dark)]",
+  secondary: "border border-[var(--line)] bg-white text-[var(--foreground)] shadow-sm hover:border-[var(--trust)] hover:bg-blue-50 hover:text-[var(--trust-dark)]",
+  ghost: "text-[var(--trust-dark)] hover:bg-blue-50",
+  navy: "bg-[var(--navy)] text-white shadow-[0_12px_26px_rgba(15,23,42,0.16)] hover:bg-slate-800",
 };
 
 export function ActionButton({ href, children, icon: Icon = ArrowRight, variant = "primary", external }: ActionButtonProps) {

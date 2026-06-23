@@ -13,7 +13,7 @@ export default function SubmitRequestPage() {
           title="Share work details and documents"
           description="Use the form for organized details, then continue on WhatsApp for document clarification, payment, and delivery."
         />
-        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} external>
+        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" external>
           Send Directly on WhatsApp
         </ActionButton>
       </div>

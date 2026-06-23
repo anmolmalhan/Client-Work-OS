@@ -13,7 +13,7 @@ export default function FaqPage() {
           title="Common questions before sending documents"
           description="Clear answers for non-technical clients who want remote digital service support."
         />
-        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} external>
+        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" external>
           Ask on WhatsApp
         </ActionButton>
       </div>

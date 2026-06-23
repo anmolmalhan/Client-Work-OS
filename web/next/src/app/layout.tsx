@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/layout/footer";
-import { Header } from "@/components/layout/header";
+import { Header, MobileBottomBar } from "@/components/layout/header";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -21,6 +21,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Header />
         <main>{children}</main>
         <Footer />
+        <MobileBottomBar />
       </body>
     </html>
   );

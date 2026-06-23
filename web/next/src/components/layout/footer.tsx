@@ -15,15 +15,15 @@ export function Footer() {
         </section>
         <section className="space-y-3 text-sm text-[var(--muted)]">
           <h3 className="font-bold text-[var(--foreground)]">Contact</h3>
-          <a className="flex items-center gap-2 hover:text-[var(--action-dark)]" href={getBusinessWhatsappLink()} target="_blank" rel="noreferrer">
+          <a className="flex items-center gap-2 font-semibold text-[var(--whatsapp-dark)] hover:text-[var(--whatsapp)]" href={getBusinessWhatsappLink()} target="_blank" rel="noreferrer">
             <MessageCircle className="size-4" aria-hidden="true" />
             WhatsApp support
           </a>
-          <a className="flex items-center gap-2 hover:text-[var(--action-dark)]" href={`tel:${businessProfile.phone}`}>
+          <a className="flex items-center gap-2 hover:text-[var(--trust-dark)]" href={`tel:${businessProfile.phone}`}>
             <Phone className="size-4" aria-hidden="true" />
             {businessProfile.phone}
           </a>
-          <a className="flex items-center gap-2 hover:text-[var(--action-dark)]" href={`mailto:${businessProfile.email}`}>
+          <a className="flex items-center gap-2 hover:text-[var(--trust-dark)]" href={`mailto:${businessProfile.email}`}>
             <Mail className="size-4" aria-hidden="true" />
             {businessProfile.email}
           </a>
@@ -35,7 +35,7 @@ export function Footer() {
             {businessProfile.serviceArea}
           </p>
           <p>{businessProfile.workingHours}</p>
-          <Link className="font-semibold text-[var(--action-dark)] hover:underline" href="/faq">
+          <Link className="font-semibold text-[var(--trust-dark)] hover:underline" href="/faq">
             Read FAQ
           </Link>
         </section>
