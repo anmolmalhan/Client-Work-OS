@@ -2,39 +2,36 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import {
   businessProfile,
+  createJobPostSchema,
   faqs,
   getBusinessWhatsappLink,
-  getDashboardStats,
-  getRequestByRequestId,
-  getRequestWhatsappLink,
-  getServiceById,
   getServiceWhatsappLink,
   pricing,
-  requests,
-  services,
   submitRequestSchema,
-  trackRequest,
   trackRequestSchema,
+  updateJobPostSchema,
   updateRequestStatusSchema,
-  type ClientRequest,
 } from "../../../../packages/domain/src";
-
-const requestStore: ClientRequest[] = requests.map((request) => ({
-  ...request,
-  documents: request.documents.map((document) => ({ ...document })),
-  adminNotes: [...request.adminNotes],
-}));
-
-function generateRequestId() {
-  return `SDS-2026-${String(requestStore.length + 1).padStart(4, "0")}`;
-}
-
-function trackStoredRequest(requestId: string, whatsappNumber: string) {
-  const digits = whatsappNumber.replace(/\D/g, "");
-  return requestStore.find(
-    (request) => request.requestId.toLowerCase() === requestId.toLowerCase() && request.whatsappNumber.endsWith(digits.slice(-10)),
-  );
-}
+import {
+  createJob,
+  deleteJob,
+  getJob,
+  listJobs,
+  listJobsGroupedByCategory,
+  recordJobView,
+  updateJob,
+} from "../repositories/jobs";
+import {
+  createRequest,
+  getDashboard,
+  getRequest,
+  getService,
+  listRequests,
+  listServices,
+  requestWhatsappLink,
+  trackStoredRequest,
+  updateRequestStatus,
+} from "../repositories/requests";
 
 export const v1Router = new Hono()
   .get("/", (c) =>
@@ -50,124 +47,106 @@ export const v1Router = new Hono()
         dashboard: "/api/v1/dashboard",
         requests: "/api/v1/requests",
         track: "/api/v1/track",
+        jobs: "/api/v1/jobs",
       },
     }),
   )
   .get("/business", (c) => c.json({ data: businessProfile }))
-  .get("/services", (c) => c.json({ data: services }))
-  .get("/services/:serviceId", (c) => {
-    const service = getServiceById(c.req.param("serviceId"));
+  .get("/services", async (c) => c.json({ data: await listServices() }))
+  .get("/services/:serviceId", async (c) => {
+    const service = await getService(c.req.param("serviceId"));
     return service ? c.json({ data: service }) : c.json({ error: "Service not found." }, 404);
   })
   .get("/pricing", (c) => c.json({ data: pricing }))
   .get("/faq", (c) => c.json({ data: faqs }))
   .get("/whatsapp", (c) => c.json({ data: { whatsappLink: getBusinessWhatsappLink() } }))
-  .get("/dashboard", (c) =>
+  .get("/dashboard", async (c) =>
     c.json({
-      data: {
-        stats: getDashboardStats(requestStore),
-        requests: requestStore,
-      },
+      data: await getDashboard(),
     }),
   )
-  .get("/requests", (c) => {
+  .get("/requests", async (c) => {
     const status = c.req.query("status");
     const query = c.req.query("query")?.trim().toLowerCase();
-    const filtered = requestStore.filter((request) => {
-      const matchesStatus = !status || status === "all" || request.status === status;
-      const matchesQuery =
-        !query ||
-        [request.requestId, request.clientName, request.whatsappNumber, request.serviceName].some((value) =>
-          value.toLowerCase().includes(query),
-        );
 
-      return matchesStatus && matchesQuery;
-    });
-
-    return c.json({ data: filtered });
+    return c.json({ data: await listRequests({ status, query }) });
   })
-  .get("/requests/:requestId", (c) => {
-    const request = requestStore.find((item) => item.requestId === c.req.param("requestId")) ?? getRequestByRequestId(c.req.param("requestId"));
+  .get("/requests/:requestId", async (c) => {
+    const request = await getRequest(c.req.param("requestId"));
     return request ? c.json({ data: request }) : c.json({ error: "Request not found." }, 404);
   })
-  .post("/requests", zValidator("json", submitRequestSchema), (c) => {
+  .post("/requests", zValidator("json", submitRequestSchema), async (c) => {
     const input = c.req.valid("json");
-    const service = getServiceById(input.serviceId);
+    const request = await createRequest(input);
 
-    if (!service) {
+    if (!request) {
       return c.json({ error: "Service not found." }, 404);
     }
-
-    const request: ClientRequest = {
-      id: crypto.randomUUID(),
-      requestId: generateRequestId(),
-      clientName: input.fullName,
-      whatsappNumber: input.whatsappNumber,
-      email: input.email || undefined,
-      serviceId: service.id,
-      serviceName: service.name,
-      description: input.description,
-      deadline: input.deadline ?? "Not fixed",
-      urgency: input.urgency,
-      status: "request_received",
-      payment: {
-        totalAmount: service.estimatedPrice ?? 0,
-        paidAmount: 0,
-        balanceAmount: service.estimatedPrice ?? 0,
-        status: "unpaid",
-      },
-      documents: [],
-      adminNotes: ["Website request received."],
-      latestUpdate: "Request received. We will check details and confirm price.",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    requestStore.unshift(request);
 
     return c.json(
       {
         data: {
           request,
-          whatsappLink: getRequestWhatsappLink(request),
+          whatsappLink: await requestWhatsappLink(request.requestId),
         },
       },
       201,
     );
   })
-  .post("/track", zValidator("json", trackRequestSchema), (c) => {
+  .post("/track", zValidator("json", trackRequestSchema), async (c) => {
     const input = c.req.valid("json");
-    const request = trackStoredRequest(input.requestId, input.whatsappNumber) ?? trackRequest(input.requestId, input.whatsappNumber);
+    const request = await trackStoredRequest(input.requestId, input.whatsappNumber);
     return request ? c.json({ data: request }) : c.json({ error: "No matching request found." }, 404);
   })
-  .patch("/requests/:requestId/status", zValidator("json", updateRequestStatusSchema), (c) => {
-    const request = requestStore.find((item) => item.requestId === c.req.param("requestId"));
+  .patch("/requests/:requestId/status", zValidator("json", updateRequestStatusSchema), async (c) => {
+    const request = await updateRequestStatus(c.req.param("requestId"), c.req.valid("json"));
 
     if (!request) {
       return c.json({ error: "Request not found." }, 404);
     }
 
-    const input = c.req.valid("json");
-    request.status = input.status;
-    request.latestUpdate = input.note ?? `Status updated to ${input.status.replaceAll("_", " ")}.`;
-    request.updatedAt = new Date().toISOString();
-
-    if (input.note) {
-      request.adminNotes.unshift(input.note);
-    }
-
     return c.json({
       data: {
         request,
-        whatsappLink: getRequestWhatsappLink(request),
+        whatsappLink: await requestWhatsappLink(request.requestId),
       },
     });
   })
-  .get("/requests/:requestId/whatsapp", (c) => {
-    const request = requestStore.find((item) => item.requestId === c.req.param("requestId"));
-    return request ? c.json({ data: { whatsappLink: getRequestWhatsappLink(request) } }) : c.json({ error: "Request not found." }, 404);
+  .get("/requests/:requestId/whatsapp", async (c) => {
+    const whatsappLink = await requestWhatsappLink(c.req.param("requestId"));
+    return whatsappLink ? c.json({ data: { whatsappLink } }) : c.json({ error: "Request not found." }, 404);
   })
-  .get("/services/:serviceId/whatsapp", (c) => {
-    const service = getServiceById(c.req.param("serviceId"));
+  .get("/services/:serviceId/whatsapp", async (c) => {
+    const service = await getService(c.req.param("serviceId"));
     return service ? c.json({ data: { whatsappLink: getServiceWhatsappLink(service) } }) : c.json({ error: "Service not found." }, 404);
+  })
+  .get("/jobs", async (c) => {
+    const category = c.req.query("category");
+    const query = c.req.query("query")?.trim();
+
+    if (c.req.query("grouped") === "true") {
+      return c.json({ data: await listJobsGroupedByCategory() });
+    }
+
+    return c.json({ data: await listJobs({ category, query }) });
+  })
+  .get("/jobs/:slug", async (c) => {
+    const job = await getJob(c.req.param("slug"));
+    return job ? c.json({ data: job }) : c.json({ error: "Job post not found." }, 404);
+  })
+  .post("/jobs/:slug/view", async (c) => {
+    const views = await recordJobView(c.req.param("slug"));
+    return views === undefined ? c.json({ error: "Job post not found." }, 404) : c.json({ data: { views } });
+  })
+  .post("/jobs", zValidator("json", createJobPostSchema), async (c) => {
+    const job = await createJob(c.req.valid("json"));
+    return c.json({ data: job }, 201);
+  })
+  .patch("/jobs/:slug", zValidator("json", updateJobPostSchema), async (c) => {
+    const job = await updateJob(c.req.param("slug"), c.req.valid("json"));
+    return job ? c.json({ data: job }) : c.json({ error: "Job post not found." }, 404);
+  })
+  .delete("/jobs/:slug", async (c) => {
+    const deleted = await deleteJob(c.req.param("slug"));
+    return deleted ? c.json({ data: { deleted: true } }) : c.json({ error: "Job post not found." }, 404);
   });

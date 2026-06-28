@@ -2,11 +2,11 @@
 
 import { requestStatusLabels, requests } from "@wdsc/domain";
 import type { ClientRequest, RequestStatus } from "@wdsc/domain";
-import { CalendarClock, CheckCircle2, IndianRupee, MessageSquareText, Search, ShieldCheck } from "lucide-react";
+import { CalendarClock, CheckCircle2, Clock3, IndianRupee, MessageSquareText, Search, ShieldCheck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useState } from "react";
 import { StatusBadge, PaymentBadge } from "@/components/marketing/status-badge";
-import { formatDate } from "@/lib/format";
+import { formatDate, formatDateTime } from "@/lib/format";
 
 const visibleStatuses: RequestStatus[] = ["request_received", "details_pending", "payment_pending", "in_progress", "completed", "delivered"];
 
@@ -123,6 +123,7 @@ function TrackResult({ request }: { request: ClientRequest }) {
           </div>
         </div>
         <VisualInfo icon={CalendarClock} label="Deadline" value={formatDate(request.deadline)} />
+        <VisualInfo icon={Clock3} label="Last updated" value={formatDateTime(request.updatedAt)} />
         <VisualInfo icon={CheckCircle2} label="Next step" value={nextStepFor(request)} />
       </div>
     </div>

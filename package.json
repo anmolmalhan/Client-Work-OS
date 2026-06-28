@@ -11,10 +11,13 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "check": "turbo check",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
     "db:generate": "turbo db:generate --filter=@wdsc/db",
     "db:migrate": "turbo db:migrate --filter=@wdsc/db"
   },
   "devDependencies": {
+    "oxlint": "^1.71.0",
     "turbo": "^2.9.16",
     "typescript": "^5.9.3"
   },

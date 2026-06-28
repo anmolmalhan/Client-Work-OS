@@ -5,6 +5,7 @@ import type { ClientRequest, RequestStatus } from "@wdsc/domain";
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { DemoBlur } from "@/components/admin/demo-blur";
 import { PaymentBadge, StatusBadge } from "@/components/marketing/status-badge";
 import { formatDate } from "@/lib/format";
 
@@ -81,8 +82,12 @@ export function RequestTable() {
               <tr className="transition hover:bg-blue-50/50" key={request.id}>
                 <td className="px-3 py-4 font-bold">{request.requestId}</td>
                 <td className="px-3 py-4">
-                  <p className="font-semibold">{request.clientName}</p>
-                  <p className="text-xs text-[var(--muted)]">{request.whatsappNumber}</p>
+                  <p className="font-semibold">
+                    <DemoBlur>{request.clientName}</DemoBlur>
+                  </p>
+                  <p className="text-xs text-[var(--muted)]">
+                    <DemoBlur>{request.whatsappNumber}</DemoBlur>
+                  </p>
                 </td>
                 <td className="px-3 py-4">{request.serviceName}</td>
                 <td className="px-3 py-4">

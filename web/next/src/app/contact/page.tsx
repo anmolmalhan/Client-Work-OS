@@ -38,7 +38,7 @@ export default function ContactPage() {
               {businessProfile.workingHours}
             </p>
           </div>
-          <p className="mt-4 rounded-md bg-emerald-50 p-3 text-sm font-semibold text-emerald-900">{businessProfile.serviceArea}</p>
+          <p className="mt-4 rounded-md border border-blue-100 bg-blue-50 p-3 text-sm font-semibold text-[var(--trust-dark)]">{businessProfile.serviceArea}</p>
         </section>
         <section>
           <h2 className="mb-4 text-lg font-bold">FAQ</h2>

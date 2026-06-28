@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 :root {
   --background: #f8fafc;
@@ -18,8 +19,38 @@
   --sun: #f59e0b;
   --coral: #2563eb;
   --sky: #2563eb;
-  --mint: #dcfce7;
+  --mint: #eff6ff;
   --cream: #f8fafc;
+  --radius: 0.5rem;
+}
+
+/* shadcn/ui design tokens mapped onto the Swift Digital Seva brand palette,
+   so shadcn primitives inherit the existing blue/navy theme. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--foreground);
+  --color-popover: var(--card);
+  --color-popover-foreground: var(--foreground);
+  --color-primary: var(--trust);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--mint);
+  --color-secondary-foreground: var(--trust-dark);
+  --color-muted: var(--mint);
+  --color-muted-foreground: var(--muted);
+  --color-accent: var(--mint);
+  --color-accent-foreground: var(--trust-dark);
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-border: var(--line);
+  --color-input: var(--line);
+  --color-ring: var(--trust);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
 * {
@@ -80,7 +111,7 @@ textarea {
 }
 
 .color-strip::before {
-  background: linear-gradient(90deg, var(--trust), var(--whatsapp), var(--amber));
+  background: linear-gradient(90deg, var(--trust), var(--navy), var(--amber));
   content: "";
   height: 4px;
   inset: 0 0 auto;

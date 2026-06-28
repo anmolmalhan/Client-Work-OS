@@ -6,7 +6,7 @@ type StatCardProps = {
 };
 
 const toneStyles = {
-  mint: "border-green-100 bg-green-50",
+  mint: "border-blue-100 bg-blue-50",
   sun: "border-amber-100 bg-amber-50",
   sky: "border-blue-100 bg-blue-50",
   coral: "border-slate-200 bg-slate-50",

@@ -1,6 +1,7 @@
 import { getRequestWhatsappLink, paymentStatusLabels, requestStatusLabels, type ClientRequest, type RequestStatus } from "@wdsc/domain";
 import { CalendarClock, CheckCircle2, FileCheck2, FileUp, IndianRupee, MessageCircle, Phone, ShieldCheck, StickyNote, UploadCloud } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { DemoBlur } from "@/components/admin/demo-blur";
 import { ActionButton } from "@/components/marketing/action-button";
 import { PaymentBadge, StatusBadge } from "@/components/marketing/status-badge";
 import { formatDate, formatDateTime } from "@/lib/format";
@@ -17,10 +18,12 @@ export function RequestDetail({ request }: { request: ClientRequest }) {
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <p className="text-sm font-bold uppercase text-[var(--trust-dark)]">{request.requestId}</p>
-              <h1 className="mt-1 text-3xl font-bold leading-tight">{request.clientName}</h1>
+              <h1 className="mt-1 text-3xl font-bold leading-tight">
+                <DemoBlur>{request.clientName}</DemoBlur>
+              </h1>
               <p className="mt-2 flex items-center gap-2 text-sm font-semibold text-[var(--muted)]">
                 <Phone className="size-4 text-[var(--trust)]" aria-hidden="true" />
-                {request.whatsappNumber}
+                <DemoBlur>{request.whatsappNumber}</DemoBlur>
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -85,7 +88,7 @@ export function RequestDetail({ request }: { request: ClientRequest }) {
               <div className="rounded-md border border-[var(--line)] bg-white p-3 shadow-sm" key={document.id}>
                 <p className="flex items-center gap-2 text-sm font-bold">
                   <FileUp className="size-4 text-[var(--trust)]" aria-hidden="true" />
-                  {document.name}
+                  <DemoBlur>{document.name}</DemoBlur>
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <DocBadge>{document.type.toUpperCase()}</DocBadge>
@@ -163,7 +166,7 @@ export function RequestDetail({ request }: { request: ClientRequest }) {
         <section className="rounded-lg border border-blue-100 bg-blue-50 p-5 shadow-sm">
           <h2 className="text-lg font-bold">Delivery proof</h2>
           <div className="mt-3 space-y-2 text-sm text-[var(--muted)]">
-            <p>Final output: {request.finalOutputFile ?? "Not uploaded yet"}</p>
+            <p>Final output: {request.finalOutputFile ? <DemoBlur>{request.finalOutputFile}</DemoBlur> : "Not uploaded yet"}</p>
             <p>Confirmation: {request.deliveryConfirmation ?? "Pending"}</p>
             <p>Updated: {formatDateTime(request.updatedAt)}</p>
           </div>
@@ -174,7 +177,7 @@ export function RequestDetail({ request }: { request: ClientRequest }) {
 }
 
 const infoTones = {
-  mint: "border-green-100 bg-green-50",
+  mint: "border-blue-100 bg-blue-50",
   sun: "border-amber-100 bg-amber-50",
   sky: "border-blue-100 bg-blue-50",
   coral: "border-slate-200 bg-slate-50",
