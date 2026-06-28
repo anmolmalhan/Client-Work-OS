@@ -1,23 +1,25 @@
 import { getBusinessWhatsappLink, pricing } from "@wdsc/domain";
 import { MessageCircle } from "lucide-react";
 import { ActionButton } from "@/components/marketing/action-button";
+import { PageHero } from "@/components/marketing/page-hero";
 import { PricingCard } from "@/components/marketing/pricing-card";
-import { SectionHeading } from "@/components/marketing/section-heading";
 
 export default function PricingPage() {
   return (
-    <div className="page-shell py-10">
-      <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
-        <SectionHeading
-          eyebrow="Pricing"
-          title="Simple pricing with final confirmation after checking documents"
-          description="Fixed services have direct prices. Forms, submissions, account support, and urgent work are quoted after checking complexity."
-        />
+    <div>
+      <PageHero
+        eyebrow="Pricing"
+        title="Simple pricing, confirmed after we check your"
+        highlight="documents"
+        description="Fixed services have direct prices. Forms, submissions, account support, and urgent work are quoted after checking complexity."
+      >
         <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" external>
           Confirm Price on WhatsApp
         </ActionButton>
-      </div>
-      <div className="mt-8 grid gap-4 lg:grid-cols-3">
+      </PageHero>
+
+      <div className="page-shell py-10">
+        <div className="grid gap-4 lg:grid-cols-3">
         {pricing.map((category) => (
           <PricingCard category={category} key={category.title} />
         ))}
@@ -36,6 +38,7 @@ export default function PricingPage() {
           Urgent work may include extra charges. Payment instructions are shared through WhatsApp after checking documents.
         </p>
       </section>
+      </div>
     </div>
   );
 }

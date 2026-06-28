@@ -129,6 +129,9 @@ export async function seedRequestsIfEmpty() {
   const serviceRows = await db.select({ id: schema.services.id, slug: schema.services.slug }).from(schema.services);
   const serviceIdBySlug = new Map(serviceRows.map((row) => [row.slug, row.id]));
 
+  // One-time seed: each row finds/creates its client before inserting the
+  // request and documents, so the awaits are intentionally sequential.
+  /* eslint-disable no-await-in-loop */
   for (const demo of demoRequests) {
     const serviceId = serviceIdBySlug.get(demo.serviceId);
     if (!serviceId) {
@@ -197,6 +200,7 @@ export async function seedRequestsIfEmpty() {
       );
     }
   }
+  /* eslint-enable no-await-in-loop */
 }
 
 export async function listServices() {

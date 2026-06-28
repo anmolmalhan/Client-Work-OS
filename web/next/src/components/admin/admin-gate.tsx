@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { authClient, signIn, signUp, useSession } from "@/lib/auth-client";
+import { authClient, signIn, useSession } from "@/lib/auth-client";
 
 export function AdminGate({ children }: { children: React.ReactNode }) {
   const { data: session, isPending } = useSession();
@@ -34,7 +34,6 @@ export function AdminGate({ children }: { children: React.ReactNode }) {
 }
 
 function SignInCard() {
-  const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -46,16 +45,12 @@ function SignInCard() {
     const form = new FormData(event.currentTarget);
     const email = String(form.get("email") ?? "").trim();
     const password = String(form.get("password") ?? "");
-    const name = String(form.get("name") ?? "").trim();
 
-    const { error: authError } =
-      mode === "sign-in"
-        ? await signIn.email({ email, password })
-        : await signUp.email({ email, password, name: name || email });
+    const { error: authError } = await signIn.email({ email, password });
 
     setLoading(false);
     if (authError) {
-      setError(authError.message ?? "Authentication failed. Check your details and try again.");
+      setError(authError.message ?? "Sign in failed. Check your email and password.");
     }
   }
 
@@ -64,38 +59,20 @@ function SignInCard() {
       <span className="inline-flex size-11 items-center justify-center rounded-md bg-secondary text-primary">
         <LockKeyhole className="size-5" aria-hidden="true" />
       </span>
-      <h1 className="mt-4 text-2xl font-bold">{mode === "sign-in" ? "Admin sign in" : "Create admin account"}</h1>
-      <p className="mt-2 text-sm leading-6 text-muted-foreground">
-        Staff access only, secured by Better Auth. {mode === "sign-in" ? "No account yet?" : "Already have an account?"}{" "}
-        <button
-          type="button"
-          className="font-bold text-primary hover:underline"
-          onClick={() => {
-            setMode(mode === "sign-in" ? "sign-up" : "sign-in");
-            setError("");
-          }}
-        >
-          {mode === "sign-in" ? "Create the first admin" : "Sign in instead"}
-        </button>
-      </p>
+      <h1 className="mt-4 text-2xl font-bold">Admin sign in</h1>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">Staff access only, secured by Better Auth.</p>
 
       <form className="mt-5 grid gap-3" onSubmit={handleSubmit}>
-        {mode === "sign-up" ? (
-          <Label>
-            Name
-            <Input name="name" placeholder="Admin name" autoComplete="name" />
-          </Label>
-        ) : null}
         <Label>
           Email
           <Input name="email" type="email" required placeholder="admin@example.com" autoComplete="email" />
         </Label>
         <Label>
           Password
-          <Input name="password" type="password" required minLength={8} placeholder="At least 8 characters" autoComplete={mode === "sign-in" ? "current-password" : "new-password"} />
+          <Input name="password" type="password" required placeholder="Your password" autoComplete="current-password" />
         </Label>
         <Button type="submit" variant="navy" disabled={loading}>
-          {loading ? "Please wait…" : mode === "sign-in" ? "Sign in" : "Create account"}
+          {loading ? "Signing in…" : "Sign in"}
         </Button>
         {error ? <p className="rounded-md bg-amber-50 p-3 text-sm font-semibold text-amber-900">{error}</p> : null}
       </form>

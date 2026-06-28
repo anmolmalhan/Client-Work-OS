@@ -48,11 +48,12 @@ export default function HomePage() {
       <section className="sunny-panel border-b border-[var(--line)]">
         <div className="page-shell grid items-center gap-8 py-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-10 lg:py-14">
           <div className="section-fade">
-            <p className="inline-flex rounded-full border border-blue-100 bg-white px-3 py-1 text-sm font-bold text-[var(--trust-dark)] shadow-sm">
+            <p className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white px-3 py-1 text-sm font-bold text-[var(--trust-dark)] shadow-sm">
+              <span className="inline-block size-2 animate-pulse rounded-full bg-[var(--whatsapp)]" aria-hidden="true" />
               WhatsApp-first digital service center
             </p>
-            <h1 className="mt-5 text-3xl font-bold leading-tight text-[var(--navy)] sm:text-5xl">
-              Online form, document and PDF work without confusion.
+            <h1 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight text-[var(--navy)] sm:text-5xl">
+              Online form, document and PDF work <span className="gradient-text">without confusion.</span>
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)] sm:mt-5 sm:text-lg sm:leading-8">
               {businessProfile.name} helps clients submit forms, upload documents, convert PDFs, check application status, and receive clear proof through WhatsApp.

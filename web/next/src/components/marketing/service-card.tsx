@@ -5,7 +5,7 @@ import { priceText } from "@/lib/format";
 
 export function ServiceCard({ service, index = 0 }: { service: ServiceItem; index?: number }) {
   return (
-    <article className="color-strip soft-card stagger-card flex h-full flex-col rounded-lg border border-[var(--line)] bg-white p-5 pt-6 shadow-sm" style={{ animationDelay: `${index * 70}ms` }}>
+    <article className="color-strip glow-card stagger-card flex h-full flex-col rounded-2xl border border-[var(--line)] bg-white p-5 pt-6 shadow-sm" style={{ animationDelay: `${index * 70}ms` }}>
       <div className="flex items-start gap-3">
         <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-md bg-blue-50 text-[var(--trust)] ring-1 ring-blue-100">
           <FileText aria-hidden="true" className="size-5" />

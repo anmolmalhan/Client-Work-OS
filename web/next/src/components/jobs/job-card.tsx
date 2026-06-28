@@ -17,7 +17,7 @@ export function JobCard({ job, index = 0 }: { job: JobPost; index?: number }) {
 
   return (
     <Card
-      className="color-strip soft-card stagger-card h-full gap-0 pt-1.5"
+      className="color-strip glow-card stagger-card h-full gap-0 rounded-2xl pt-1.5"
       style={{ animationDelay: `${index * 70}ms` }}
     >
       <CardHeader className="gap-3">

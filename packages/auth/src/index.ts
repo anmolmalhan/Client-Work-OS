@@ -25,6 +25,9 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     autoSignIn: true,
+    // Admin accounts are provisioned, not self-registered. Flip to false (or
+    // use the env override) only when you need to create another admin.
+    disableSignUp: process.env.AUTH_ALLOW_SIGNUP !== "true",
   },
   user: {
     additionalFields: {

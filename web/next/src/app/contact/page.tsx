@@ -2,22 +2,24 @@ import { businessProfile, faqs, getBusinessWhatsappLink } from "@wdsc/domain";
 import { Mail, MessageCircle, Phone, Timer } from "lucide-react";
 import { ActionButton } from "@/components/marketing/action-button";
 import { FaqList } from "@/components/marketing/faq-list";
-import { SectionHeading } from "@/components/marketing/section-heading";
+import { PageHero } from "@/components/marketing/page-hero";
 
 export default function ContactPage() {
   return (
-    <div className="page-shell py-10">
-      <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
-        <SectionHeading
-          eyebrow="Contact"
-          title="WhatsApp is the main support channel"
-          description="Send details, documents, payment confirmations, and delivery questions through WhatsApp for the fastest response."
-        />
+    <div>
+      <PageHero
+        eyebrow="Contact"
+        title="WhatsApp is the main support"
+        highlight="channel"
+        description="Send details, documents, payment confirmations, and delivery questions through WhatsApp for the fastest response."
+      >
         <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" external>
-          WhatsApp Button
+          Open WhatsApp
         </ActionButton>
-      </div>
-      <div className="mt-8 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+      </PageHero>
+
+      <div className="page-shell py-10">
+        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
         <section className="rounded-lg border border-[var(--line)] bg-white p-5 shadow-sm">
           <h2 className="text-lg font-bold">Business details</h2>
           <div className="mt-4 grid gap-3 text-sm">
@@ -44,6 +46,7 @@ export default function ContactPage() {
           <h2 className="mb-4 text-lg font-bold">FAQ</h2>
           <FaqList items={faqs.slice(0, 5)} />
         </section>
+        </div>
       </div>
     </div>
   );

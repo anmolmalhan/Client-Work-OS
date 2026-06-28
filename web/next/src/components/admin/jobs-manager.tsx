@@ -33,7 +33,17 @@ export function JobsManager() {
             Could not reach the API. Make sure it is running on port 4100.
           </p>
         ) : isLoading ? (
-          <p className="rounded-lg border border-[var(--line)] bg-white p-4 text-sm text-[var(--muted)]">Loading listings…</p>
+          <ul className="divide-y divide-[var(--line)] rounded-lg border border-[var(--line)] bg-white shadow-sm">
+            {["s1", "s2", "s3", "s4", "s5"].map((id) => (
+              <li key={id} className="flex items-center justify-between gap-3 px-4 py-3.5">
+                <div className="flex-1 space-y-2">
+                  <div className="h-3.5 w-2/3 animate-pulse rounded bg-slate-200" />
+                  <div className="h-2.5 w-2/5 animate-pulse rounded bg-slate-100" />
+                </div>
+                <div className="size-6 animate-pulse rounded-full bg-slate-100" />
+              </li>
+            ))}
+          </ul>
         ) : (
           <ul className="divide-y divide-[var(--line)] rounded-lg border border-[var(--line)] bg-white shadow-sm">
             {jobs.map((job) => (

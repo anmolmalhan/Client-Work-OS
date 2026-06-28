@@ -1,9 +1,9 @@
 import { getDashboardStats, requests } from "@wdsc/domain";
 import { formatMoney } from "@wdsc/domain";
 import { AdminGate } from "@/components/admin/admin-gate";
+import { AdminHero } from "@/components/admin/admin-hero";
 import { RequestTable } from "@/components/admin/request-table";
 import { StatCard } from "@/components/admin/stat-card";
-import { SectionHeading } from "@/components/marketing/section-heading";
 
 export default function AdminDashboardPage() {
   const stats = getDashboardStats(requests);
@@ -11,7 +11,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="page-shell py-10">
       <AdminGate>
-        <SectionHeading
+        <AdminHero
           eyebrow="Admin dashboard"
           title="Manage client requests, payments, documents, and delivery"
           description="Demo dashboard with the fields needed for request priority, payment follow-up, document checks, notes, and delivery proof."

@@ -75,7 +75,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
   const deadline = applyDeadlineLabel(job.applyEndDate);
 
   return (
-    <div className="page-shell py-8 sm:py-10">
+    <div>
       <JobViewTracker slug={job.slug} />
       <script
         type="application/ld+json"
@@ -83,53 +83,60 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingJsonLd(job)) }}
       />
 
-      <nav aria-label="Breadcrumb" className="text-sm font-semibold text-[var(--muted)]">
-        <Link href="/sarkari-result" className="hover:text-[var(--trust-dark)]">
-          Sarkari Result
-        </Link>
-        <span className="px-2">/</span>
-        <Link href={`/sarkari-result?category=${job.category}`} className="hover:text-[var(--trust-dark)]">
-          {jobCategoryLabels[job.category]}
-        </Link>
-      </nav>
+      <section className="gradient-hero relative overflow-hidden">
+        <div className="section-fade page-shell relative py-8 sm:py-10">
+          <nav aria-label="Breadcrumb" className="text-sm font-semibold text-blue-100/80">
+            <Link href="/sarkari-result" className="hover:text-white">
+              Sarkari Result
+            </Link>
+            <span className="px-2">/</span>
+            <Link href={`/sarkari-result?category=${job.category}`} className="hover:text-white">
+              {jobCategoryLabels[job.category]}
+            </Link>
+          </nav>
 
-      <header className="mt-4 rounded-lg border border-[var(--line)] bg-white p-5 shadow-sm sm:p-6">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold uppercase text-[var(--trust-dark)]">
-            {jobCategoryLabels[job.category]}
-          </span>
-          {deadline ? (
-            <span
-              className={`rounded-full px-2.5 py-1 text-xs font-bold ring-1 ${
-                deadline.tone === "closed"
-                  ? "bg-slate-100 text-slate-600 ring-slate-200"
-                  : deadline.tone === "soon"
-                    ? "bg-amber-50 text-amber-800 ring-amber-200"
-                    : "bg-emerald-50 text-emerald-700 ring-emerald-200"
-              }`}
-            >
-              {deadline.text}
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="rounded-full bg-white/15 px-2.5 py-1 text-xs font-bold uppercase text-white backdrop-blur">
+              {jobCategoryLabels[job.category]}
             </span>
-          ) : null}
+            {deadline ? (
+              <span
+                className={`rounded-full px-2.5 py-1 text-xs font-bold ring-1 ${
+                  deadline.tone === "closed"
+                    ? "bg-white/10 text-blue-100 ring-white/20"
+                    : deadline.tone === "soon"
+                      ? "bg-amber-400/20 text-amber-100 ring-amber-300/40"
+                      : "bg-emerald-400/20 text-emerald-100 ring-emerald-300/40"
+                }`}
+              >
+                {deadline.text}
+              </span>
+            ) : null}
+          </div>
+          <h1 className="mt-3 text-3xl font-black leading-tight tracking-tight text-white sm:text-4xl">{job.title}</h1>
+          <p className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-blue-100/90">
+            <Building2 className="size-4 shrink-0" aria-hidden="true" />
+            {job.organization}
+          </p>
+          <p className="mt-4 max-w-3xl text-sm leading-7 text-blue-100/90">{job.shortInfo}</p>
+          <div className="mt-5 flex flex-wrap gap-2 text-sm font-bold">
+            {typeof job.vacancies === "number" ? (
+              <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-white backdrop-blur">
+                <Users className="size-4" aria-hidden="true" />
+                {job.vacancies.toLocaleString("en-IN")} Total Posts
+              </span>
+            ) : null}
+            {job.applyEndDate ? (
+              <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-white backdrop-blur">
+                Last Date: {formatDate(job.applyEndDate)}
+              </span>
+            ) : null}
+          </div>
         </div>
-        <h1 className="mt-3 text-2xl font-bold leading-tight text-[var(--navy)] sm:text-3xl">{job.title}</h1>
-        <p className="mt-2 flex items-center gap-1.5 text-sm font-semibold text-[var(--muted)]">
-          <Building2 className="size-4 shrink-0" aria-hidden="true" />
-          {job.organization}
-        </p>
-        <p className="mt-4 text-sm leading-7 text-[var(--foreground)]">{job.shortInfo}</p>
-        <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-[var(--muted)]">
-          {typeof job.vacancies === "number" ? (
-            <span className="inline-flex items-center gap-1.5">
-              <Users className="size-4" aria-hidden="true" />
-              {job.vacancies.toLocaleString("en-IN")} Total Posts
-            </span>
-          ) : null}
-          {job.applyEndDate ? <span>Last Date: {formatDate(job.applyEndDate)}</span> : null}
-        </div>
-      </header>
+      </section>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+      <div className="page-shell py-8 sm:py-10">
+        <div className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
         <div className="space-y-6">
           <section className="rounded-lg border border-[var(--line)] bg-white p-5 shadow-sm sm:p-6">
             <SectionHeading title="Important Dates" />
@@ -188,8 +195,9 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
           </section>
         </div>
 
-        <div className="lg:sticky lg:top-20 lg:self-start">
-          <ApplyHelpCta job={job} />
+          <div className="lg:sticky lg:top-20 lg:self-start">
+            <ApplyHelpCta job={job} />
+          </div>
         </div>
       </div>
     </div>
