@@ -2,16 +2,24 @@ import { db, schema } from "@wdsc/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 const trustedOrigins = (process.env.HONO_TRUSTED_ORIGINS ?? "http://localhost:3100")
   .split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
 
+// Secret hardening: never ship the insecure dev fallback to production.
+const secret = process.env.BETTER_AUTH_SECRET;
+if (isProduction && !secret) {
+  throw new Error("BETTER_AUTH_SECRET is required in production. Set it in the deployment environment.");
+}
+
 // Centralized auth server (zerostarter.dev pattern). Email/password admin login
 // backed by the shared Postgres database via the Drizzle adapter.
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL ?? "http://localhost:4100",
-  secret: process.env.BETTER_AUTH_SECRET ?? "dev-only-insecure-secret-change-me",
+  secret: secret ?? "dev-only-insecure-secret-change-me",
   trustedOrigins,
   database: drizzleAdapter(db, {
     provider: "pg",
@@ -22,6 +30,16 @@ export const auth = betterAuth({
       verification: schema.verification,
     },
   }),
+  advanced: {
+    // In production the web app and API may live on different domains, making
+    // session requests cross-site. SameSite=None + Secure lets the session
+    // cookie travel on those requests. Locally (http, same-site) we keep the
+    // browser default (Lax) so cookies work without HTTPS.
+    defaultCookieAttributes: isProduction ? { sameSite: "none", secure: true, partitioned: true } : undefined,
+    // If web + API share a parent domain (e.g. app.example.com & api.example.com),
+    // enable this with that domain so the cookie is shared across subdomains:
+    // crossSubDomainCookies: { enabled: true, domain: ".example.com" },
+  },
   emailAndPassword: {
     enabled: true,
     autoSignIn: true,
