@@ -7,14 +7,18 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "dev": "bun run --hot src/index.ts",
+    "dev": "bun --env-file=../../.env run --hot src/index.ts",
     "build": "bun build src/index.ts --target=bun --outdir=dist",
     "check": "tsc --noEmit"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.8.0",
+    "@wdsc/auth": "workspace:*",
+    "@wdsc/db": "workspace:*",
     "@wdsc/domain": "workspace:*",
     "@wdsc/env": "workspace:*",
+    "better-auth": "^1.2.8",
+    "drizzle-orm": "^0.45.2",
     "hono": "^4.12.23",
     "zod": "^4.1.13"
   },

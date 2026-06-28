@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ActionButton } from "@/components/marketing/action-button";
 
 const navItems = [
+  { href: "/sarkari-result", label: "Sarkari Result" },
   { href: "/services", label: "Services" },
   { href: "/pricing", label: "Pricing" },
   { href: "/submit-request", label: "Submit" },

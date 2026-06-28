@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 :root {
   --background: #f8fafc;
@@ -18,8 +19,38 @@
   --sun: #f59e0b;
   --coral: #2563eb;
   --sky: #2563eb;
-  --mint: #dcfce7;
+  --mint: #eff6ff;
   --cream: #f8fafc;
+  --radius: 0.5rem;
+}
+
+/* shadcn/ui design tokens mapped onto the Swift Digital Seva brand palette,
+   so shadcn primitives inherit the existing blue/navy theme. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--foreground);
+  --color-popover: var(--card);
+  --color-popover-foreground: var(--foreground);
+  --color-primary: var(--trust);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--mint);
+  --color-secondary-foreground: var(--trust-dark);
+  --color-muted: var(--mint);
+  --color-muted-foreground: var(--muted);
+  --color-accent: var(--mint);
+  --color-accent-foreground: var(--trust-dark);
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-border: var(--line);
+  --color-input: var(--line);
+  --color-ring: var(--trust);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
 * {
@@ -80,7 +111,7 @@ textarea {
 }
 
 .color-strip::before {
-  background: linear-gradient(90deg, var(--trust), var(--whatsapp), var(--amber));
+  background: linear-gradient(90deg, var(--trust), var(--navy), var(--amber));
   content: "";
   height: 4px;
   inset: 0 0 auto;
@@ -147,6 +178,84 @@ details[open] .faq-panel {
   to {
     transform: scaleX(1);
   }
+}
+
+/* ---- Bold & modern utilities ---- */
+.gradient-hero {
+  background:
+    radial-gradient(900px 400px at 85% -10%, rgba(99, 102, 241, 0.55), transparent 60%),
+    radial-gradient(700px 380px at 0% 110%, rgba(14, 165, 233, 0.35), transparent 55%),
+    linear-gradient(135deg, #111e4a 0%, #1d3fb0 48%, #4f46e5 100%);
+}
+
+.gradient-text {
+  background: linear-gradient(92deg, #2563eb 0%, #4f46e5 55%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(10px);
+}
+
+.glow-card {
+  transition:
+    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.glow-card:hover {
+  border-color: rgba(79, 70, 229, 0.45);
+  box-shadow: 0 22px 48px rgba(37, 99, 235, 0.22);
+  transform: translateY(-4px);
+}
+
+.row-hover {
+  transition:
+    background 160ms ease,
+    padding-left 160ms ease;
+}
+
+.row-hover:hover {
+  background: linear-gradient(90deg, rgba(37, 99, 235, 0.08), transparent);
+  padding-left: 1.25rem;
+}
+
+/* Gradient header strips for the Sarkari category columns */
+.cat-latest_job {
+  background: linear-gradient(120deg, #2563eb, #4f46e5);
+}
+.cat-result {
+  background: linear-gradient(120deg, #059669, #0d9488);
+}
+.cat-admit_card {
+  background: linear-gradient(120deg, #d97706, #ea580c);
+}
+.cat-answer_key {
+  background: linear-gradient(120deg, #7c3aed, #c026d3);
+}
+.cat-syllabus {
+  background: linear-gradient(120deg, #475569, #0f172a);
+}
+
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+.shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 700ms ease;
+}
+.shine:hover::after {
+  transform: translateX(120%);
 }
 
 @media (max-width: 767px) {

@@ -1,11 +1,16 @@
 import { relations } from "drizzle-orm";
-import { boolean, date, index, numeric, pgEnum, pgTable, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
-import { paymentStatuses, requestStatuses, serviceCategories, urgencyLevels } from "@wdsc/domain";
+import { boolean, date, index, integer, jsonb, numeric, pgEnum, pgTable, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
+import { jobCategories, jobPostStatuses, paymentStatuses, requestStatuses, serviceCategories, urgencyLevels } from "@wdsc/domain";
+import type { JobImportantDate } from "@wdsc/domain";
+
+export * from "./auth";
 
 export const requestStatus = pgEnum("request_status", requestStatuses);
 export const paymentStatus = pgEnum("payment_status", paymentStatuses);
 export const serviceCategory = pgEnum("service_category", serviceCategories);
 export const urgencyLevel = pgEnum("urgency_level", urgencyLevels);
+export const jobCategory = pgEnum("job_category", jobCategories);
+export const jobPostStatus = pgEnum("job_post_status", jobPostStatuses);
 
 const timestamps = {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
@@ -107,6 +112,41 @@ export const payments = pgTable(
   },
   (table) => ({
     requestIdx: index("payments_request_id_idx").on(table.requestId),
+  }),
+);
+
+export const jobPosts = pgTable(
+  "job_posts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    slug: text("slug").notNull(),
+    title: text("title").notNull(),
+    organization: text("organization").notNull(),
+    category: jobCategory("category").notNull(),
+    status: jobPostStatus("status").default("published").notNull(),
+    shortInfo: text("short_info").notNull(),
+    vacancies: integer("vacancies"),
+    applicationFee: text("application_fee"),
+    eligibility: text("eligibility").notNull(),
+    ageLimit: text("age_limit"),
+    importantDates: jsonb("important_dates").$type<JobImportantDate[]>().default([]).notNull(),
+    applyStartDate: date("apply_start_date"),
+    applyEndDate: date("apply_end_date"),
+    applyLink: text("apply_link"),
+    notificationLink: text("notification_link"),
+    officialWebsite: text("official_website"),
+    metaTitle: text("meta_title"),
+    metaDescription: text("meta_description"),
+    isFeatured: boolean("is_featured").default(false).notNull(),
+    views: integer("views").default(0).notNull(),
+    publishedAt: timestamp("published_at", { withTimezone: true }).defaultNow().notNull(),
+    ...timestamps,
+  },
+  (table) => ({
+    slugIdx: uniqueIndex("job_posts_slug_idx").on(table.slug),
+    categoryIdx: index("job_posts_category_idx").on(table.category),
+    statusIdx: index("job_posts_status_idx").on(table.status),
+    publishedAtIdx: index("job_posts_published_at_idx").on(table.publishedAt),
   }),
 );
 

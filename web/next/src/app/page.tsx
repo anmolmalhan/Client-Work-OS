@@ -1,4 +1,4 @@
-import { businessProfile, faqs, getBusinessWhatsappLink, pricing, services } from "@wdsc/domain";
+import { businessProfile, faqs, getBusinessWhatsappLink, getPublishedJobPosts, pricing, services } from "@wdsc/domain";
 import {
   ArrowRight,
   BadgeCheck,
@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { JobCard } from "@/components/jobs/job-card";
 import { ActionButton } from "@/components/marketing/action-button";
 import { FaqList } from "@/components/marketing/faq-list";
 import { PricingCard } from "@/components/marketing/pricing-card";
@@ -37,39 +38,45 @@ const steps = [
 
 const progressItems = ["Received", "Checked", "In progress", "Delivered"];
 const popularServices = services.slice(0, 6);
+const latestForms = getPublishedJobPosts()
+  .filter((job) => job.category === "latest_job")
+  .slice(0, 3);
 
 export default function HomePage() {
   return (
     <div>
       <section className="sunny-panel border-b border-[var(--line)]">
-        <div className="page-shell grid items-center gap-10 py-10 lg:grid-cols-[0.92fr_1.08fr] lg:py-14">
+        <div className="page-shell grid items-center gap-8 py-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-10 lg:py-14">
           <div className="section-fade">
-            <p className="inline-flex rounded-full border border-blue-100 bg-white px-3 py-1 text-sm font-bold text-[var(--trust-dark)] shadow-sm">
+            <p className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white px-3 py-1 text-sm font-bold text-[var(--trust-dark)] shadow-sm">
+              <span className="inline-block size-2 animate-pulse rounded-full bg-[var(--whatsapp)]" aria-hidden="true" />
               WhatsApp-first digital service center
             </p>
-            <h1 className="mt-5 text-4xl font-bold leading-tight text-[var(--navy)] sm:text-5xl">
-              Online form, document and PDF work without confusion.
+            <h1 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight text-[var(--navy)] sm:text-5xl">
+              Online form, document and PDF work <span className="gradient-text">without confusion.</span>
             </h1>
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-[var(--muted)]">
+            <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)] sm:mt-5 sm:text-lg sm:leading-8">
               {businessProfile.name} helps clients submit forms, upload documents, convert PDFs, check application status, and receive clear proof through WhatsApp.
             </p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" external>
                 Start on WhatsApp
               </ActionButton>
-              <ActionButton href="/submit-request" icon={ClipboardCheck}>
-                Submit Request
-              </ActionButton>
+              <div className="hidden sm:block">
+                <ActionButton href="/submit-request" icon={ClipboardCheck}>
+                  Submit Request
+                </ActionButton>
+              </div>
               <ActionButton href="/track-request" icon={SearchCheck} variant="secondary">
-                Track Work
+                Track Request
               </ActionButton>
             </div>
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            <div className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
               {trustBadges.map((item) => (
-                <div className="rounded-lg border border-[var(--line)] bg-white p-3 shadow-sm" key={item.title}>
+                <div className="rounded-lg border border-[var(--line)] bg-white p-2 shadow-sm sm:p-3" key={item.title}>
                   <item.icon className="size-5 text-[var(--trust)]" aria-hidden="true" />
-                  <p className="mt-2 text-sm font-bold">{item.title}</p>
-                  <p className="mt-1 text-xs leading-5 text-[var(--muted)]">{item.text}</p>
+                  <p className="mt-2 text-xs font-bold leading-4 sm:text-sm sm:leading-5">{item.title}</p>
+                  <p className="mt-1 hidden text-xs leading-5 text-[var(--muted)] sm:block">{item.text}</p>
                 </div>
               ))}
             </div>
@@ -157,6 +164,32 @@ export default function HomePage() {
           <ActionButton href="/services" variant="secondary">
             View All Services
           </ActionButton>
+        </div>
+      </section>
+
+      <section className="border-y border-[var(--line)] bg-white py-12">
+        <div className="page-shell section-fade">
+          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+            <SectionHeading
+              eyebrow="Sarkari Result"
+              title="Latest government forms open now"
+              description="Track new Sarkari Naukri vacancies and apply on time. Need help filling a form? We do it for you on WhatsApp."
+            />
+            <Link className="focus-ring inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-bold text-[var(--trust-dark)] hover:bg-blue-50" href="/sarkari-result">
+              View All Forms
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+          </div>
+          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {latestForms.map((job, index) => (
+              <JobCard job={job} index={index} key={job.id} />
+            ))}
+          </div>
+          <div className="mt-5 md:hidden">
+            <ActionButton href="/sarkari-result" variant="secondary">
+              View All Forms
+            </ActionButton>
+          </div>
         </div>
       </section>
 

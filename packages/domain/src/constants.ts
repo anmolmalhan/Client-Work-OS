@@ -14,6 +14,9 @@ export const serviceCategories = ["forms", "documents", "conversion", "status_su
 export const priceTypes = ["fixed", "starting_at", "variable"] as const;
 export const urgencyLevels = ["normal", "urgent"] as const;
 
+export const jobCategories = ["latest_job", "result", "admit_card", "answer_key", "syllabus"] as const;
+export const jobPostStatuses = ["draft", "published"] as const;
+
 export const requestStatusLabels = {
   request_received: "Request Received",
   details_pending: "Details Pending",
@@ -38,4 +41,26 @@ export const serviceCategoryLabels = {
   conversion: "File Conversion",
   status_support: "Status Support",
   account_support: "Account Support",
+} as const;
+
+export const jobCategoryLabels = {
+  latest_job: "Latest Jobs",
+  result: "Results",
+  admit_card: "Admit Cards",
+  answer_key: "Answer Keys",
+  syllabus: "Syllabus",
+} as const;
+
+// Short helper text shown under each Sarkari Result category column.
+export const jobCategoryDescriptions = {
+  latest_job: "New government recruitment forms open for online application.",
+  result: "Latest declared results and merit lists.",
+  admit_card: "Hall tickets and exam call letters available to download.",
+  answer_key: "Official and provisional answer keys.",
+  syllabus: "Exam patterns and detailed syllabus.",
+} as const;
+
+export const jobPostStatusLabels = {
+  draft: "Draft",
+  published: "Published",
 } as const;

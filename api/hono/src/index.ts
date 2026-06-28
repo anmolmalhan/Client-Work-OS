@@ -1,3 +1,4 @@
+import { auth } from "@wdsc/auth";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { apiEnv } from "../../../packages/env/src/api-hono";
@@ -28,6 +29,8 @@ app.use(
   }),
 );
 
+app.on(["GET", "POST"], "/api/auth/*", (c) => auth.handler(c.req.raw));
+
 app.get("/", (c) => c.json(apiInfo));
 app.route("/health", healthRouter);
 app.route("/api/v1", v1Router);
@@ -39,6 +42,10 @@ app.onError((error, c) => {
 });
 
 export type AppType = typeof app;
+
+// Typed surface for the Hono RPC client (end-to-end type safety on the web).
+export { v1Router };
+export type V1Type = typeof v1Router;
 
 function getPort(appUrl: string) {
   const explicitPort = appUrl.match(/:(\d+)(?:\/|$)/)?.[1];

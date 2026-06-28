@@ -1,6 +1,7 @@
-import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 type ActionButtonProps = {
   href: string;
@@ -10,30 +11,32 @@ type ActionButtonProps = {
   external?: boolean;
 };
 
-const variants = {
-  primary: "bg-[var(--trust)] text-white shadow-[0_12px_26px_rgba(37,99,235,0.22)] hover:bg-[var(--trust-dark)]",
-  whatsapp: "bg-[var(--whatsapp)] text-white shadow-[0_12px_26px_rgba(34,197,94,0.22)] hover:bg-[var(--whatsapp-dark)]",
-  secondary: "border border-[var(--line)] bg-white text-[var(--foreground)] shadow-sm hover:border-[var(--trust)] hover:bg-blue-50 hover:text-[var(--trust-dark)]",
-  ghost: "text-[var(--trust-dark)] hover:bg-blue-50",
-  navy: "bg-[var(--navy)] text-white shadow-[0_12px_26px_rgba(15,23,42,0.16)] hover:bg-slate-800",
-};
+// Maps the marketing variant names onto the shadcn Button variants.
+const variantMap = {
+  primary: "default",
+  whatsapp: "whatsapp",
+  secondary: "secondary",
+  ghost: "ghost",
+  navy: "navy",
+} as const;
 
 export function ActionButton({ href, children, icon: Icon = ArrowRight, variant = "primary", external }: ActionButtonProps) {
-  const className = `focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-semibold transition ${variants[variant]}`;
-
-  if (external) {
-    return (
-      <a className={className} href={href} target="_blank" rel="noreferrer">
-        <Icon aria-hidden="true" className="size-4" />
-        <span>{children}</span>
-      </a>
-    );
-  }
-
-  return (
-    <Link className={className} href={href}>
+  const content = (
+    <>
       <Icon aria-hidden="true" className="size-4" />
       <span>{children}</span>
-    </Link>
+    </>
+  );
+
+  return (
+    <Button asChild variant={variantMap[variant]}>
+      {external ? (
+        <a href={href} target="_blank" rel="noreferrer">
+          {content}
+        </a>
+      ) : (
+        <Link href={href}>{content}</Link>
+      )}
+    </Button>
   );
 }
