@@ -1,6 +1,6 @@
 "use client";
 
-import { requestStatusLabels, requestStatuses, requests } from "@wdsc/domain";
+import { requestStatusLabels, requestStatuses } from "@wdsc/domain";
 import type { ClientRequest, RequestStatus } from "@wdsc/domain";
 import { Search } from "lucide-react";
 import Link from "next/link";
@@ -8,6 +8,8 @@ import { useMemo, useState } from "react";
 import { DemoBlur } from "@/components/admin/demo-blur";
 import { PaymentBadge, StatusBadge } from "@/components/marketing/status-badge";
 import { formatDate } from "@/lib/format";
+
+const EMPTY_REQUESTS: ClientRequest[] = [];
 
 function matchesStatus(request: ClientRequest, status: "all" | RequestStatus) {
   return status === "all" || request.status === status;
@@ -24,13 +26,13 @@ function matchesSearch(request: ClientRequest, query: string) {
   );
 }
 
-export function RequestTable() {
+export function RequestTable({ requests = EMPTY_REQUESTS, loading = false }: { requests?: ClientRequest[]; loading?: boolean }) {
   const [status, setStatus] = useState<"all" | RequestStatus>("all");
   const [query, setQuery] = useState("");
 
   const filteredRequests = useMemo(
     () => requests.filter((request) => matchesStatus(request, status) && matchesSearch(request, query)),
-    [query, status],
+    [requests, query, status],
   );
 
   return (
@@ -78,6 +80,19 @@ export function RequestTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-[var(--line)]">
+            {loading ? (
+              <tr>
+                <td className="px-3 py-6 text-sm text-[var(--muted)]" colSpan={9}>
+                  Loading requests…
+                </td>
+              </tr>
+            ) : filteredRequests.length === 0 ? (
+              <tr>
+                <td className="px-3 py-6 text-sm text-[var(--muted)]" colSpan={9}>
+                  No requests yet. New submissions from the website will appear here.
+                </td>
+              </tr>
+            ) : null}
             {filteredRequests.map((request) => (
               <tr className="transition hover:bg-blue-50/50" key={request.id}>
                 <td className="px-3 py-4 font-bold">{request.requestId}</td>

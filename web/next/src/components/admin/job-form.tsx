@@ -1,6 +1,6 @@
 "use client";
 
-import { jobCategories, jobCategoryLabels, jobPostStatuses, jobPostStatusLabels, type JobCategory, type JobPostStatus } from "@wdsc/domain";
+import { jobCategories, jobCategoryLabels, jobPostStatuses, jobPostStatusLabels, type JobCategory, type JobPost, type JobPostStatus } from "@wdsc/domain";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Plus, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
@@ -15,29 +15,40 @@ const labelClass = "grid gap-1.5 text-sm font-semibold";
 
 type Result = { ok: true; slug: string } | { ok: false; message: string } | null;
 
-export function JobForm() {
+export function JobForm({ editing, onDone }: { editing?: JobPost | null; onDone?: () => void }) {
+  const isEditing = Boolean(editing);
   const rowId = useRef(1);
   const formRef = useRef<HTMLFormElement>(null);
   const newRow = (label = ""): DateRow => ({ id: `row-${rowId.current++}`, label, value: "" });
-  const [importantDates, setImportantDates] = useState<DateRow[]>([newRow("Last Date to Apply")]);
+  const [importantDates, setImportantDates] = useState<DateRow[]>(
+    editing?.importantDates?.length
+      ? editing.importantDates.map((date) => ({ id: `row-${rowId.current++}`, label: date.label, value: date.value }))
+      : [newRow("Last Date to Apply")],
+  );
   const [result, setResult] = useState<Result>(null);
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: async (payload: JobPayload) => {
-      const response = await rpc.jobs.$post({ json: payload });
+      const response = editing
+        ? await rpc.jobs[":slug"].$patch({ param: { slug: editing.slug }, json: payload })
+        : await rpc.jobs.$post({ json: payload });
       if (!response.ok) {
         throw new Error("save failed");
       }
-      return (await response.json()).data;
+      return (await response.json()).data as JobPost;
     },
     onSuccess: (job) => {
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
       setResult({ ok: true, slug: job.slug });
-      formRef.current?.reset();
-      setImportantDates([newRow("Last Date to Apply")]);
+      if (isEditing) {
+        onDone?.();
+      } else {
+        formRef.current?.reset();
+        setImportantDates([newRow("Last Date to Apply")]);
+      }
     },
-    onError: () => setResult({ ok: false, message: "Could not save. Check required fields and that the API is running on port 4100." }),
+    onError: () => setResult({ ok: false, message: "Could not save. Check required fields and that the API is reachable." }),
   });
 
   function updateDate(id: string, key: "label" | "value", value: string) {
@@ -83,15 +94,15 @@ export function JobForm() {
       <div className="grid gap-4 sm:grid-cols-2">
         <label className={labelClass}>
           Title*
-          <input name="title" required className={inputClass} placeholder="SSC CGL 2026 Online Form" />
+          <input name="title" required className={inputClass} placeholder="SSC CGL 2026 Online Form" defaultValue={editing?.title ?? ""} />
         </label>
         <label className={labelClass}>
           Organization*
-          <input name="organization" required className={inputClass} placeholder="Staff Selection Commission" />
+          <input name="organization" required className={inputClass} placeholder="Staff Selection Commission" defaultValue={editing?.organization ?? ""} />
         </label>
         <label className={labelClass}>
           Category
-          <select name="category" className={inputClass} defaultValue="latest_job">
+          <select name="category" className={inputClass} defaultValue={editing?.category ?? "latest_job"}>
             {jobCategories.map((item) => (
               <option key={item} value={item}>
                 {jobCategoryLabels[item]}
@@ -101,7 +112,7 @@ export function JobForm() {
         </label>
         <label className={labelClass}>
           Status
-          <select name="status" className={inputClass} defaultValue="published">
+          <select name="status" className={inputClass} defaultValue={editing?.status ?? "published"}>
             {jobPostStatuses.map((item) => (
               <option key={item} value={item}>
                 {jobPostStatusLabels[item]}
@@ -113,34 +124,34 @@ export function JobForm() {
 
       <label className={`${labelClass} mt-4`}>
         Short info*
-        <textarea name="shortInfo" required rows={3} className={`${inputClass} py-2`} placeholder="Brief summary shown in listings and search results." />
+        <textarea name="shortInfo" required rows={3} className={`${inputClass} py-2`} placeholder="Brief summary shown in listings and search results." defaultValue={editing?.shortInfo ?? ""} />
       </label>
 
       <label className={`${labelClass} mt-4`}>
         Eligibility*
-        <textarea name="eligibility" required rows={2} className={`${inputClass} py-2`} placeholder="Bachelor's degree in any stream." />
+        <textarea name="eligibility" required rows={2} className={`${inputClass} py-2`} placeholder="Bachelor's degree in any stream." defaultValue={editing?.eligibility ?? ""} />
       </label>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-3">
         <label className={labelClass}>
           Vacancies
-          <input name="vacancies" type="number" min="0" className={inputClass} placeholder="17727" />
+          <input name="vacancies" type="number" min="0" className={inputClass} placeholder="17727" defaultValue={editing?.vacancies ?? ""} />
         </label>
         <label className={labelClass}>
           Age limit
-          <input name="ageLimit" className={inputClass} placeholder="18 to 32 years" />
+          <input name="ageLimit" className={inputClass} placeholder="18 to 32 years" defaultValue={editing?.ageLimit ?? ""} />
         </label>
         <label className={labelClass}>
           Application fee
-          <input name="applicationFee" className={inputClass} placeholder="Gen Rs 100, SC/ST Nil" />
+          <input name="applicationFee" className={inputClass} placeholder="Gen Rs 100, SC/ST Nil" defaultValue={editing?.applicationFee ?? ""} />
         </label>
         <label className={labelClass}>
           Apply start date
-          <input name="applyStartDate" type="date" className={inputClass} />
+          <input name="applyStartDate" type="date" className={inputClass} defaultValue={editing?.applyStartDate ?? ""} />
         </label>
         <label className={labelClass}>
           Apply end date
-          <input name="applyEndDate" type="date" className={inputClass} />
+          <input name="applyEndDate" type="date" className={inputClass} defaultValue={editing?.applyEndDate ?? ""} />
         </label>
       </div>
 
@@ -182,38 +193,43 @@ export function JobForm() {
       <div className="mt-4 grid gap-4 sm:grid-cols-3">
         <label className={labelClass}>
           Apply link
-          <input name="applyLink" type="url" className={inputClass} placeholder="https://" />
+          <input name="applyLink" type="url" className={inputClass} placeholder="https://" defaultValue={editing?.applyLink ?? ""} />
         </label>
         <label className={labelClass}>
           Notification link
-          <input name="notificationLink" type="url" className={inputClass} placeholder="https://" />
+          <input name="notificationLink" type="url" className={inputClass} placeholder="https://" defaultValue={editing?.notificationLink ?? ""} />
         </label>
         <label className={labelClass}>
           Official website
-          <input name="officialWebsite" type="url" className={inputClass} placeholder="https://" />
+          <input name="officialWebsite" type="url" className={inputClass} placeholder="https://" defaultValue={editing?.officialWebsite ?? ""} />
         </label>
       </div>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <label className={labelClass}>
           Meta title (SEO)
-          <input name="metaTitle" className={inputClass} placeholder="Optional custom <title>" />
+          <input name="metaTitle" className={inputClass} placeholder="Optional custom <title>" defaultValue={editing?.metaTitle ?? ""} />
         </label>
         <label className={labelClass}>
           Meta description (SEO)
-          <input name="metaDescription" className={inputClass} placeholder="Optional search snippet" />
+          <input name="metaDescription" className={inputClass} placeholder="Optional search snippet" defaultValue={editing?.metaDescription ?? ""} />
         </label>
       </div>
 
       <label className="mt-4 inline-flex items-center gap-2 text-sm font-semibold">
-        <input name="isFeatured" type="checkbox" className="size-4" />
+        <input name="isFeatured" type="checkbox" className="size-4" defaultChecked={editing?.isFeatured ?? false} />
         Feature on top of listings
       </label>
 
-      <div className="mt-6 flex items-center gap-4">
+      <div className="mt-6 flex flex-wrap items-center gap-4">
         <Button type="submit" variant="navy" disabled={submitting}>
-          {submitting ? "Saving…" : "Publish Listing"}
+          {submitting ? "Saving…" : isEditing ? "Save changes" : "Publish Listing"}
         </Button>
+        {isEditing ? (
+          <Button type="button" variant="outline" onClick={() => onDone?.()}>
+            Cancel
+          </Button>
+        ) : null}
         {result?.ok ? (
           <p className="text-sm font-semibold text-emerald-700">
             Saved.{" "}

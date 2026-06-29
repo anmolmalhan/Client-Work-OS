@@ -1,23 +1,16 @@
 "use client";
 
-import { requestStatusLabels, requests } from "@wdsc/domain";
+import { requestStatusLabels } from "@wdsc/domain";
 import type { ClientRequest, RequestStatus } from "@wdsc/domain";
+import { useMutation } from "@tanstack/react-query";
 import { CalendarClock, CheckCircle2, Clock3, IndianRupee, MessageSquareText, Search, ShieldCheck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useState } from "react";
 import { StatusBadge, PaymentBadge } from "@/components/marketing/status-badge";
 import { formatDate, formatDateTime } from "@/lib/format";
+import { rpc } from "@/lib/rpc";
 
 const visibleStatuses: RequestStatus[] = ["request_received", "details_pending", "payment_pending", "in_progress", "completed", "delivered"];
-
-function findRequest(requestId: string, phone: string): ClientRequest | undefined {
-  const digits = phone.replace(/\D/g, "");
-  return requests.find(
-    (request) =>
-      request.requestId.toLowerCase() === requestId.trim().toLowerCase() &&
-      request.whatsappNumber.replace(/\D/g, "").endsWith(digits.slice(-10)),
-  );
-}
 
 function nextStepFor(request: ClientRequest) {
   if (request.status === "details_pending") {
@@ -39,9 +32,21 @@ function nextStepFor(request: ClientRequest) {
 }
 
 export function TrackRequestForm() {
-  const [requestId, setRequestId] = useState("SDS-2026-0001");
-  const [phone, setPhone] = useState("9876500001");
-  const [result, setResult] = useState<ClientRequest | null | undefined>(requests[0]);
+  const [requestId, setRequestId] = useState("");
+  const [phone, setPhone] = useState("");
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const response = await rpc.track.$post({ json: { requestId: requestId.trim(), whatsappNumber: phone.trim() } });
+      if (response.status === 404) {
+        return null;
+      }
+      if (!response.ok) {
+        throw new Error("Could not check status right now. Please try again.");
+      }
+      return (await response.json()).data as ClientRequest;
+    },
+  });
 
   return (
     <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
@@ -49,20 +54,20 @@ export function TrackRequestForm() {
         className="rounded-lg border border-[var(--line)] bg-white p-5 shadow-sm"
         onSubmit={(event) => {
           event.preventDefault();
-          setResult(findRequest(requestId, phone) ?? null);
+          mutation.mutate();
         }}
       >
         <label className="grid gap-2 text-sm font-semibold">
           Request ID
-          <input className="focus-ring min-h-11 rounded-md border border-[var(--line)] px-3" onChange={(event) => setRequestId(event.target.value)} required value={requestId} />
+          <input className="focus-ring min-h-11 rounded-md border border-[var(--line)] px-3" onChange={(event) => setRequestId(event.target.value)} placeholder="SDS-2026-0001" required value={requestId} />
         </label>
         <label className="mt-4 grid gap-2 text-sm font-semibold">
           WhatsApp number
-          <input className="focus-ring min-h-11 rounded-md border border-[var(--line)] px-3" inputMode="tel" onChange={(event) => setPhone(event.target.value)} required value={phone} />
+          <input className="focus-ring min-h-11 rounded-md border border-[var(--line)] px-3" inputMode="tel" onChange={(event) => setPhone(event.target.value)} placeholder="Registered WhatsApp number" required value={phone} />
         </label>
-        <button className="focus-ring mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-[var(--trust)] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--trust-dark)]" type="submit">
+        <button className="focus-ring mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-[var(--trust)] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--trust-dark)] disabled:opacity-60" type="submit" disabled={mutation.isPending}>
           <Search className="size-4" aria-hidden="true" />
-          Check Status
+          {mutation.isPending ? "Checking…" : "Check Status"}
         </button>
         <div className="mt-5 rounded-md border border-[var(--line)] bg-slate-50 p-4 text-sm leading-6 text-[var(--muted)]">
           <ShieldCheck className="mb-2 size-5 text-[var(--trust)]" aria-hidden="true" />
@@ -70,14 +75,18 @@ export function TrackRequestForm() {
         </div>
       </form>
       <section className="rounded-lg border border-[var(--line)] bg-white p-5 shadow-sm">
-        {result === undefined ? (
-          <p className="text-sm text-[var(--muted)]">Enter a request ID and WhatsApp number to view status.</p>
-        ) : result === null ? (
+        {mutation.isPending ? (
+          <p className="text-sm text-[var(--muted)]">Checking your request status…</p>
+        ) : mutation.isError ? (
+          <p className="rounded-md bg-amber-50 p-3 text-sm font-semibold text-amber-900">{(mutation.error as Error).message}</p>
+        ) : mutation.data === null ? (
           <p className="rounded-md bg-amber-50 p-3 text-sm font-semibold text-amber-900">
-            No request found. Please check the Request ID or contact on WhatsApp.
+            No request found. Please check the Request ID and WhatsApp number, or contact us on WhatsApp.
           </p>
+        ) : mutation.data ? (
+          <TrackResult request={mutation.data} />
         ) : (
-          <TrackResult request={result} />
+          <p className="text-sm text-[var(--muted)]">Enter a request ID and WhatsApp number to view status.</p>
         )}
       </section>
     </div>

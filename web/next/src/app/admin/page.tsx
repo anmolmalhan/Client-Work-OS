@@ -1,30 +1,19 @@
-import { getDashboardStats, requests } from "@wdsc/domain";
-import { formatMoney } from "@wdsc/domain";
 import { AdminGate } from "@/components/admin/admin-gate";
 import { AdminHero } from "@/components/admin/admin-hero";
-import { RequestTable } from "@/components/admin/request-table";
-import { StatCard } from "@/components/admin/stat-card";
+import { RequestsDashboard } from "@/components/admin/requests-dashboard";
+
+export const dynamic = "force-dynamic";
 
 export default function AdminDashboardPage() {
-  const stats = getDashboardStats(requests);
-
   return (
     <div className="page-shell py-10">
       <AdminGate>
         <AdminHero
           eyebrow="Admin dashboard"
           title="Manage client requests, payments, documents, and delivery"
-          description="Demo dashboard with the fields needed for request priority, payment follow-up, document checks, notes, and delivery proof."
+          description="Live request inbox with the fields needed for request priority, payment follow-up, document checks, notes, and delivery proof."
         />
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <StatCard label="Total requests" value={stats.totalRequests} helper="Generated request IDs" tone="mint" />
-          <StatCard label="In progress" value={stats.inProgress} helper="Currently being worked on" tone="sky" />
-          <StatCard label="Revenue collected" value={formatMoney(stats.revenueCollected)} helper="Paid and partial payments" tone="sun" />
-          <StatCard label="Balance pending" value={formatMoney(stats.balancePending)} helper="Pending from clients" tone="coral" />
-        </div>
-        <div className="mt-8">
-          <RequestTable />
-        </div>
+        <RequestsDashboard />
       </AdminGate>
     </div>
   );

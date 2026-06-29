@@ -5,10 +5,25 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ApplyHelpCta } from "@/components/jobs/apply-cta";
 import { ImportantDates } from "@/components/jobs/important-dates";
+import { JobCard } from "@/components/jobs/job-card";
 import { JobViewTracker } from "@/components/jobs/job-view-tracker";
 import { SectionHeading } from "@/components/marketing/section-heading";
-import { fetchJob } from "@/lib/api";
+import { fetchJob, fetchJobs } from "@/lib/api";
 import { applyDeadlineLabel, formatDate } from "@/lib/format";
+
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3100";
+
+function breadcrumbJsonLd(job: JobPost) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Sarkari Result", item: `${SITE_URL}/sarkari-result` },
+      { "@type": "ListItem", position: 2, name: jobCategoryLabels[job.category], item: `${SITE_URL}/sarkari-result?category=${job.category}` },
+      { "@type": "ListItem", position: 3, name: job.title, item: `${SITE_URL}/sarkari-result/${job.slug}` },
+    ],
+  };
+}
 
 export const revalidate = 300;
 
@@ -73,6 +88,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
   }
 
   const deadline = applyDeadlineLabel(job.applyEndDate);
+  const related = (await fetchJobs({ category: job.category })).filter((item) => item.slug !== job.slug).slice(0, 3);
 
   return (
     <div>
@@ -81,6 +97,11 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingJsonLd(job)) }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(job)) }}
       />
 
       <section className="gradient-hero relative overflow-hidden">
@@ -199,6 +220,17 @@ export default async function JobDetailPage({ params }: { params: Promise<{ slug
             <ApplyHelpCta job={job} />
           </div>
         </div>
+
+        {related.length > 0 ? (
+          <section className="mt-12">
+            <SectionHeading eyebrow="Keep exploring" title={`More ${jobCategoryLabels[job.category]}`} />
+            <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {related.map((item, index) => (
+                <JobCard job={item} index={index} key={item.id} />
+              ))}
+            </div>
+          </section>
+        ) : null}
       </div>
     </div>
   );

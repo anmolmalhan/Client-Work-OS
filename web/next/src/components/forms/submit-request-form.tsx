@@ -1,8 +1,10 @@
 "use client";
 
 import { businessProfile, buildNewRequestMessage, buildWhatsappLink, services } from "@wdsc/domain";
+import { useMutation } from "@tanstack/react-query";
 import { ArrowRight, CalendarClock, CheckCircle2, FileCheck2, MessageCircle, ShieldCheck, Upload } from "lucide-react";
 import { useMemo, useState } from "react";
+import { rpc } from "@/lib/rpc";
 
 const steps = ["Work Details", "Service Type", "Documents", "Review & WhatsApp"];
 
@@ -11,11 +13,39 @@ export function SubmitRequestForm() {
   const [submitted, setSubmitted] = useState(false);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [serviceId, setServiceId] = useState(services[0]?.id ?? "");
   const [description, setDescription] = useState("");
   const [deadline, setDeadline] = useState("");
+  const [consent, setConsent] = useState(false);
   const [fileCount, setFileCount] = useState(0);
+  const [result, setResult] = useState<{ requestId: string; whatsappLink: string } | null>(null);
   const selectedService = services.find((service) => service.id === serviceId);
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const response = await rpc.requests.$post({
+        json: {
+          fullName: name,
+          whatsappNumber: phone,
+          email: email || undefined,
+          serviceId,
+          description,
+          deadline: deadline || undefined,
+          urgency: "normal",
+          consentGiven: true,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Could not submit the request. Please check your details or use WhatsApp.");
+      }
+      return (await response.json()).data;
+    },
+    onSuccess: (data) => {
+      setResult({ requestId: data.request.requestId, whatsappLink: data.whatsappLink ?? whatsappLink });
+      setSubmitted(true);
+    },
+  });
 
   const whatsappLink = useMemo(() => {
     const message = [
@@ -51,7 +81,7 @@ export function SubmitRequestForm() {
             nextStep();
             return;
           }
-          setSubmitted(true);
+          mutation.mutate();
         }}
       >
         <div className="grid gap-2 sm:grid-cols-4">
@@ -76,7 +106,7 @@ export function SubmitRequestForm() {
               </label>
               <label className="grid gap-2 text-sm font-semibold">
                 Email ID optional
-                <input className="focus-ring min-h-11 rounded-md border border-[var(--line)] px-3" type="email" />
+                <input className="focus-ring min-h-11 rounded-md border border-[var(--line)] px-3" type="email" onChange={(event) => setEmail(event.target.value)} value={email} />
               </label>
               <label className="grid gap-2 text-sm font-semibold sm:col-span-2">
                 Work description
@@ -144,7 +174,7 @@ export function SubmitRequestForm() {
                 ))}
               </div>
               <label className="flex gap-3 rounded-md bg-slate-50 p-3 text-sm font-semibold">
-                <input className="mt-1 size-4 accent-[var(--trust)]" required type="checkbox" />
+                <input className="mt-1 size-4 accent-[var(--trust)]" required type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} />
                 I agree that my documents will be used only to complete this requested digital work.
               </label>
             </div>
@@ -160,16 +190,27 @@ export function SubmitRequestForm() {
               <div className="rounded-md border border-amber-100 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
                 Final price is confirmed after document and portal check. Payment is requested only after the scope is clear.
               </div>
-              {submitted ? (
+              {submitted && result ? (
                 <div className="rounded-lg border border-green-100 bg-green-50 p-5">
                   <CheckCircle2 className="size-7 text-[var(--whatsapp)]" aria-hidden="true" />
-                  <h2 className="mt-3 text-xl font-bold">Request draft is ready</h2>
-                  <p className="mt-2 text-sm leading-6 text-[var(--muted)]">Continue on WhatsApp so documents, payment confirmation, and delivery proof stay in one chat.</p>
-                  <a className="focus-ring mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-[var(--whatsapp)] px-4 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[var(--whatsapp-dark)]" href={whatsappLink} target="_blank" rel="noreferrer">
+                  <h2 className="mt-3 text-xl font-bold">Request submitted ✓</h2>
+                  <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                    Your request ID is <span className="font-bold text-[var(--foreground)]">{result.requestId}</span>. Save it to track your request. Continue on WhatsApp so documents, payment and delivery proof stay in one chat.
+                  </p>
+                  <a className="focus-ring mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-[var(--whatsapp)] px-4 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[var(--whatsapp-dark)]" href={result.whatsappLink} target="_blank" rel="noreferrer">
                     <MessageCircle className="size-4" aria-hidden="true" />
                     Continue on WhatsApp
                   </a>
                 </div>
+              ) : null}
+              {mutation.isError ? (
+                <p className="rounded-md bg-amber-50 p-3 text-sm font-semibold text-amber-900">
+                  {(mutation.error as Error).message}{" "}
+                  <a className="underline" href={whatsappLink} target="_blank" rel="noreferrer">
+                    Send on WhatsApp instead
+                  </a>
+                  .
+                </p>
               ) : null}
             </div>
           ) : null}
@@ -182,13 +223,12 @@ export function SubmitRequestForm() {
                 Back
               </button>
             ) : null}
-            <button className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-[var(--trust)] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--trust-dark)]" type="submit">
-              {step === 3 ? "Review & Continue on WhatsApp" : "Continue"}
+            <button className="focus-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-[var(--trust)] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[var(--trust-dark)] disabled:opacity-60" type="submit" disabled={mutation.isPending}>
+              {step === 3 ? (mutation.isPending ? "Submitting…" : "Submit Request") : "Continue"}
               <ArrowRight className="size-4" aria-hidden="true" />
             </button>
           </div>
         ) : null}
-        {submitted ? <p className="mt-4 text-xs font-semibold text-[var(--muted)]">Demo Request ID: SDS-2026-DEMO. Real request IDs will be generated after backend connection.</p> : null}
       </form>
 
       <aside className="rounded-lg border border-[var(--line)] bg-white p-5 shadow-sm">
