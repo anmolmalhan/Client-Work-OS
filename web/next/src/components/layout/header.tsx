@@ -1,6 +1,7 @@
 import { businessProfile, getBusinessWhatsappLink } from "@wdsc/domain";
 import { ClipboardList, MessageCircle, Search } from "lucide-react";
 import Link from "next/link";
+import { MobileNav } from "@/components/layout/mobile-nav";
 import { ActionButton } from "@/components/marketing/action-button";
 
 const navItems = [
@@ -31,20 +32,23 @@ export function Header() {
             </Link>
           ))}
         </nav>
-        <div className="hidden sm:block">
-          <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" external>
-            WhatsApp
-          </ActionButton>
+        <div className="flex items-center gap-2">
+          <div className="hidden sm:block">
+            <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" external>
+              WhatsApp
+            </ActionButton>
+          </div>
+          <Link
+            aria-label="Open WhatsApp request"
+            className="focus-ring inline-flex size-11 items-center justify-center rounded-md bg-[var(--whatsapp)] text-white sm:hidden"
+            href={getBusinessWhatsappLink()}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <MessageCircle aria-hidden="true" className="size-5" />
+          </Link>
+          <MobileNav items={navItems} />
         </div>
-        <Link
-          aria-label="Open WhatsApp request"
-          className="focus-ring inline-flex size-11 items-center justify-center rounded-md bg-[var(--whatsapp)] text-white sm:hidden"
-          href={getBusinessWhatsappLink()}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <MessageCircle aria-hidden="true" className="size-5" />
-        </Link>
       </div>
     </header>
   );
