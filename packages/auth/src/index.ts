@@ -34,16 +34,6 @@ export const auth = betterAuth({
       verification: schema.verification,
     },
   }),
-  advanced: {
-    // In production the web app and API may live on different domains, making
-    // session requests cross-site. SameSite=None + Secure lets the session
-    // cookie travel on those requests. Locally (http, same-site) we keep the
-    // browser default (Lax) so cookies work without HTTPS.
-    defaultCookieAttributes: isProduction ? { sameSite: "none", secure: true, partitioned: true } : undefined,
-    // If web + API share a parent domain (e.g. app.example.com & api.example.com),
-    // enable this with that domain so the cookie is shared across subdomains:
-    // crossSubDomainCookies: { enabled: true, domain: ".example.com" },
-  },
   emailAndPassword: {
     enabled: true,
     autoSignIn: true,
