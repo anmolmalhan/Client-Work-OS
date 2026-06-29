@@ -4,5 +4,5 @@
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "outDir": "dist"
   },
-  "include": ["src", "api"]
+  "include": ["src"]
 }
