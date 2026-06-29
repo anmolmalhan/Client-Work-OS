@@ -32,6 +32,7 @@ import {
   trackStoredRequest,
   updateRequestStatus,
 } from "../repositories/requests";
+import { requireAdmin } from "../middleware/auth";
 
 export const v1Router = new Hono()
   .get("/", (c) =>
@@ -60,18 +61,18 @@ export const v1Router = new Hono()
   .get("/pricing", (c) => c.json({ data: pricing }))
   .get("/faq", (c) => c.json({ data: faqs }))
   .get("/whatsapp", (c) => c.json({ data: { whatsappLink: getBusinessWhatsappLink() } }))
-  .get("/dashboard", async (c) =>
+  .get("/dashboard", requireAdmin, async (c) =>
     c.json({
       data: await getDashboard(),
     }),
   )
-  .get("/requests", async (c) => {
+  .get("/requests", requireAdmin, async (c) => {
     const status = c.req.query("status");
     const query = c.req.query("query")?.trim().toLowerCase();
 
     return c.json({ data: await listRequests({ status, query }) });
   })
-  .get("/requests/:requestId", async (c) => {
+  .get("/requests/:requestId", requireAdmin, async (c) => {
     const request = await getRequest(c.req.param("requestId"));
     return request ? c.json({ data: request }) : c.json({ error: "Request not found." }, 404);
   })
@@ -98,7 +99,7 @@ export const v1Router = new Hono()
     const request = await trackStoredRequest(input.requestId, input.whatsappNumber);
     return request ? c.json({ data: request }) : c.json({ error: "No matching request found." }, 404);
   })
-  .patch("/requests/:requestId/status", zValidator("json", updateRequestStatusSchema), async (c) => {
+  .patch("/requests/:requestId/status", requireAdmin, zValidator("json", updateRequestStatusSchema), async (c) => {
     const request = await updateRequestStatus(c.req.param("requestId"), c.req.valid("json"));
 
     if (!request) {
@@ -138,15 +139,15 @@ export const v1Router = new Hono()
     const views = await recordJobView(c.req.param("slug"));
     return views === undefined ? c.json({ error: "Job post not found." }, 404) : c.json({ data: { views } });
   })
-  .post("/jobs", zValidator("json", createJobPostSchema), async (c) => {
+  .post("/jobs", requireAdmin, zValidator("json", createJobPostSchema), async (c) => {
     const job = await createJob(c.req.valid("json"));
     return c.json({ data: job }, 201);
   })
-  .patch("/jobs/:slug", zValidator("json", updateJobPostSchema), async (c) => {
+  .patch("/jobs/:slug", requireAdmin, zValidator("json", updateJobPostSchema), async (c) => {
     const job = await updateJob(c.req.param("slug"), c.req.valid("json"));
     return job ? c.json({ data: job }) : c.json({ error: "Job post not found." }, 404);
   })
-  .delete("/jobs/:slug", async (c) => {
+  .delete("/jobs/:slug", requireAdmin, async (c) => {
     const deleted = await deleteJob(c.req.param("slug"));
     return deleted ? c.json({ data: { deleted: true } }) : c.json({ error: "Job post not found." }, 404);
   });

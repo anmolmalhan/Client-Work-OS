@@ -5,4 +5,8 @@ import { hc } from "hono/client";
 // Route paths, params, query and response shapes are all inferred from the API.
 const baseUrl = `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4100"}/api/v1`;
 
-export const rpc = hc<V1Type>(baseUrl);
+// `credentials: "include"` sends the Better Auth session cookie cross-site so
+// admin write endpoints (protected by requireAdmin) accept authenticated calls.
+export const rpc = hc<V1Type>(baseUrl, {
+  init: { credentials: "include" },
+});
