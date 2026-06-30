@@ -1,4 +1,4 @@
-import { getRequestWhatsappLink, paymentStatusLabels, requestStatusLabels, type ClientRequest, type RequestStatus } from "@wdsc/domain";
+import { formatMoney, getRequestWhatsappLink, paymentStatusLabels, requestStatusLabels, type ClientRequest, type RequestStatus } from "@wdsc/domain";
 import { CalendarClock, CheckCircle2, FileCheck2, FileUp, IndianRupee, MessageCircle, Phone, ShieldCheck, StickyNote, UploadCloud } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { DemoBlur } from "@/components/admin/demo-blur";
@@ -34,7 +34,7 @@ export function RequestDetail({ request }: { request: ClientRequest }) {
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
             <MiniMetric icon={FileCheck2} label="Service" value={request.serviceName} />
             <MiniMetric icon={CalendarClock} label="Deadline" value={formatDate(request.deadline)} />
-            <MiniMetric icon={IndianRupee} label="Balance" value={`Rs ${request.payment.balanceAmount}`} />
+            <MiniMetric icon={IndianRupee} label="Balance" value={formatMoney(request.payment.balanceAmount)} />
             <MiniMetric icon={ShieldCheck} label="Priority" value={request.urgency === "urgent" ? "High priority" : "Normal"} />
           </div>
         </div>
@@ -42,8 +42,8 @@ export function RequestDetail({ request }: { request: ClientRequest }) {
         <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <InfoBlock label="Current status" value={requestStatusLabels[request.status]} tone="sky" />
           <InfoBlock label="Payment status" value={paymentStatusLabels[request.payment.status]} tone="sun" />
-          <InfoBlock label="Total price" value={`Rs ${request.payment.totalAmount}`} tone="mint" />
-          <InfoBlock label="Paid amount" value={`Rs ${request.payment.paidAmount}`} tone="coral" />
+          <InfoBlock label="Total price" value={formatMoney(request.payment.totalAmount)} tone="mint" />
+          <InfoBlock label="Paid amount" value={formatMoney(request.payment.paidAmount)} tone="coral" />
         </div>
 
         <div className="mt-5 rounded-lg border border-[var(--line)] bg-slate-50 p-4">

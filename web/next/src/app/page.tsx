@@ -22,6 +22,7 @@ import { FaqList } from "@/components/marketing/faq-list";
 import { PricingCard } from "@/components/marketing/pricing-card";
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { ServiceCard } from "@/components/marketing/service-card";
+import { Testimonials, TrustStats } from "@/components/marketing/trust-block";
 
 const trustBadges = [
   { icon: IndianRupee, title: "Price clear first", text: "Amount is confirmed before final work starts." },
@@ -100,6 +101,10 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+      </section>
+
+      <section className="page-shell section-fade -mt-6 pb-2">
+        <TrustStats />
       </section>
 
       <section className="page-shell section-fade py-12">
@@ -239,6 +244,10 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+      </section>
+
+      <section className="page-shell section-fade py-12">
+        <Testimonials />
       </section>
 
       <section className="border-y border-[var(--line)] bg-white py-12">

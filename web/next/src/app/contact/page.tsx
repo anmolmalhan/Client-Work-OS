@@ -25,7 +25,7 @@ export default function ContactPage() {
           <div className="mt-4 grid gap-3 text-sm">
             <a className="flex items-center gap-3 rounded-md border border-[var(--line)] bg-slate-50 p-3 font-semibold hover:text-[var(--whatsapp-dark)]" href={getBusinessWhatsappLink()} target="_blank" rel="noreferrer">
               <MessageCircle className="size-5 text-[var(--whatsapp)]" aria-hidden="true" />
-              WhatsApp: {businessProfile.whatsappNumber}
+              WhatsApp: {businessProfile.phone}
             </a>
             <a className="flex items-center gap-3 rounded-md border border-[var(--line)] bg-slate-50 p-3 font-semibold hover:text-[var(--trust-dark)]" href={`tel:${businessProfile.phone}`}>
               <Phone className="size-5 text-[var(--trust)]" aria-hidden="true" />

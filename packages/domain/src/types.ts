@@ -37,6 +37,31 @@ export type PricingCategory = {
   }>;
 };
 
+export type ServiceBundle = {
+  id: string;
+  name: string;
+  tagline: string;
+  includes: string[];
+  price: number;
+  originalPrice?: number;
+  featured?: boolean;
+};
+
+export type Testimonial = {
+  name: string;
+  city: string;
+  task: string;
+  quote: string;
+  rating: number;
+};
+
+export type TrustMetrics = {
+  formsCompleted: number;
+  rating: number;
+  reviews: number;
+  avgReplyMinutes: number;
+};
+
 export type UploadedDocument = {
   id: string;
   name: string;

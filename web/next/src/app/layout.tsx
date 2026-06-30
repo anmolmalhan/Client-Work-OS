@@ -1,3 +1,4 @@
+import { businessProfile } from "@wdsc/domain";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -43,10 +44,30 @@ export const metadata: Metadata = {
   },
 };
 
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: siteName,
+  description: siteDescription,
+  url: siteUrl,
+  email: businessProfile.email,
+  telephone: businessProfile.phone,
+  areaServed: "IN",
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    telephone: businessProfile.phone,
+    email: businessProfile.email,
+    areaServed: "IN",
+    availableLanguage: ["en", "hi"],
+  },
+};
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body className={inter.className}>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
         <Providers>
           <Header />
           <main>{children}</main>

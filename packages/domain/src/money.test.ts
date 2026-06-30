@@ -31,10 +31,10 @@ describe("getPaymentStatus", () => {
 
 describe("formatMoney", () => {
   test("formats whole rupees without decimals", () => {
-    expect(formatMoney(149)).toBe("Rs 149");
+    expect(formatMoney(149)).toBe("₹149");
   });
 
   test("keeps decimals when present", () => {
-    expect(formatMoney(149.5)).toBe("Rs 149.5");
+    expect(formatMoney(149.5)).toBe("₹149.5");
   });
 });

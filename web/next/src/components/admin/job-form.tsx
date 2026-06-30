@@ -143,7 +143,7 @@ export function JobForm({ editing, onDone }: { editing?: JobPost | null; onDone?
         </label>
         <label className={labelClass}>
           Application fee
-          <input name="applicationFee" className={inputClass} placeholder="Gen Rs 100, SC/ST Nil" defaultValue={editing?.applicationFee ?? ""} />
+          <input name="applicationFee" className={inputClass} placeholder="Gen ₹100, SC/ST Nil" defaultValue={editing?.applicationFee ?? ""} />
         </label>
         <label className={labelClass}>
           Apply start date

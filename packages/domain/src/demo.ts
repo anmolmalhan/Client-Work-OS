@@ -5,7 +5,7 @@ import {
   buildRequestStatusMessage,
 } from "./whatsapp";
 import { getBalanceAmount, getPaymentStatus } from "./money";
-import type { BusinessProfile, ClientRequest, DashboardStats, FaqItem, PricingCategory, ServiceItem } from "./types";
+import type { BusinessProfile, ClientRequest, DashboardStats, FaqItem, PricingCategory, ServiceBundle, ServiceItem, Testimonial, TrustMetrics } from "./types";
 
 export const businessProfile: BusinessProfile = {
   name: "Swift Digital Seva",
@@ -150,20 +150,20 @@ export const pricing: PricingCategory[] = [
     title: "Fixed-price services",
     description: "Small file work with clear output.",
     items: [
-      { label: "PDF merge", price: "Rs 49" },
-      { label: "PDF compression", price: "Rs 49" },
-      { label: "Image to PDF", price: "Rs 49" },
-      { label: "PDF to image", price: "Rs 59" },
+      { label: "PDF merge", price: "₹49" },
+      { label: "PDF compression", price: "₹49" },
+      { label: "Image to PDF", price: "₹49" },
+      { label: "PDF to image", price: "₹59" },
     ],
   },
   {
     title: "Starting-price services",
     description: "Common digital work where final price depends on document count.",
     items: [
-      { label: "Online form filling", price: "From Rs 149" },
-      { label: "Document upload", price: "From Rs 99" },
-      { label: "Admit card download", price: "From Rs 99" },
-      { label: "Photo/signature resize", price: "From Rs 79" },
+      { label: "Online form filling", price: "From ₹149" },
+      { label: "Document upload", price: "From ₹99" },
+      { label: "Admit card download", price: "From ₹99" },
+      { label: "Photo/signature resize", price: "From ₹79" },
     ],
   },
   {
@@ -172,9 +172,78 @@ export const pricing: PricingCategory[] = [
     items: [
       { label: "Application submission", price: "After checking" },
       { label: "Account support", price: "After checking" },
-      { label: "Urgent work", price: "Extra Rs 50-200" },
+      { label: "Urgent work", price: "Extra ₹50-200" },
       { label: "Complex file conversion", price: "After checking" },
     ],
+  },
+];
+
+// ⚠️ PLACEHOLDER trust content — REPLACE before launch with real, verifiable numbers
+// and real customer reviews (with permission). Do not present these sample values as facts.
+export const trustMetrics: TrustMetrics = {
+  formsCompleted: 1200,
+  rating: 4.8,
+  reviews: 200,
+  avgReplyMinutes: 10,
+};
+
+// ⚠️ SAMPLE testimonials for layout only — swap for genuine reviews + screenshots before launch.
+export const testimonials: Testimonial[] = [
+  {
+    name: "Rahul K.",
+    city: "Patna",
+    task: "SSC form filling",
+    quote: "Filled my SSC form in 15 minutes. Photo and signature size was perfect, and I got the confirmation PDF on WhatsApp.",
+    rating: 5,
+  },
+  {
+    name: "Priya S.",
+    city: "Jaipur",
+    task: "Signature resize",
+    quote: "I was stuck with the 50kb signature size. They fixed it and uploaded everything for me. Very easy.",
+    rating: 5,
+  },
+  {
+    name: "Amit V.",
+    city: "Lucknow",
+    task: "Admit card download",
+    quote: "Could not open the portal on my phone. They downloaded my admit card and sent it within 10 minutes.",
+    rating: 5,
+  },
+];
+
+export const bundles: ServiceBundle[] = [
+  {
+    id: "form-combo",
+    name: "Form Combo",
+    tagline: "Most popular for exam forms",
+    includes: ["Online form filling", "Photo & signature resize", "Document upload"],
+    price: 249,
+    originalPrice: 327,
+    featured: true,
+  },
+  {
+    id: "complete-application",
+    name: "Complete Application",
+    tagline: "End to end, fully handled",
+    includes: ["Eligibility check", "Form filling", "Payment help", "Delivery proof"],
+    price: 299,
+  },
+  {
+    id: "document-pack",
+    name: "Document Pack",
+    tagline: "All your file work in one go",
+    includes: ["PDF merge", "PDF compression", "File conversion", "Photo / signature resize"],
+    price: 99,
+    originalPrice: 186,
+  },
+  {
+    id: "exam-season-pass",
+    name: "Exam Season Pass",
+    tagline: "For repeat applicants",
+    includes: ["3 form fillings (any exam)", "Priority same-day service"],
+    price: 399,
+    originalPrice: 447,
   },
 ];
 

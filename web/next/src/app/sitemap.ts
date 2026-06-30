@@ -1,10 +1,10 @@
-import { getPublishedJobPosts } from "@wdsc/domain";
+import { getPublishedJobPosts, guides } from "@wdsc/domain";
 import type { MetadataRoute } from "next";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3100";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticPaths = ["", "/services", "/pricing", "/submit-request", "/track-request", "/contact", "/faq", "/sarkari-result"];
+  const staticPaths = ["", "/services", "/guides", "/pricing", "/submit-request", "/track-request", "/contact", "/faq", "/about", "/privacy", "/refund", "/terms", "/sarkari-result"];
 
   const staticEntries: MetadataRoute.Sitemap = staticPaths.map((path) => ({
     url: `${BASE_URL}${path}`,
@@ -19,5 +19,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...staticEntries, ...jobEntries];
+  const guideEntries: MetadataRoute.Sitemap = guides.map((guide) => ({
+    url: `${BASE_URL}/guides/${guide.slug}`,
+    lastModified: guide.updatedAt,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...staticEntries, ...guideEntries, ...jobEntries];
 }

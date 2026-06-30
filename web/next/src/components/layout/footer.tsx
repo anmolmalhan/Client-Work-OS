@@ -29,16 +29,30 @@ export function Footer() {
           </a>
         </section>
         <section className="space-y-3 text-sm text-[var(--muted)]">
-          <h3 className="font-bold text-[var(--foreground)]">Business</h3>
+          <h3 className="font-bold text-[var(--foreground)]">Company</h3>
           <p className="flex items-center gap-2">
             <MapPin className="size-4" aria-hidden="true" />
             {businessProfile.serviceArea}
           </p>
           <p>{businessProfile.workingHours}</p>
-          <Link className="font-semibold text-[var(--trust-dark)] hover:underline" href="/faq">
-            Read FAQ
-          </Link>
+          <div className="grid gap-2 pt-1 font-semibold text-[var(--trust-dark)]">
+            <Link className="hover:underline" href="/about">About us</Link>
+            <Link className="hover:underline" href="/sarkari-result">Sarkari Result</Link>
+            <Link className="hover:underline" href="/guides">Guides</Link>
+            <Link className="hover:underline" href="/faq">FAQ</Link>
+          </div>
         </section>
+      </div>
+      <div className="border-t border-[var(--line)]">
+        <div className="page-shell flex flex-col items-center justify-between gap-3 py-5 text-xs text-[var(--muted)] sm:flex-row">
+          <p>© {new Date().getFullYear()} {businessProfile.name}. A registered digital service business operating across India.</p>
+          <nav aria-label="Legal" className="flex flex-wrap items-center gap-x-4 gap-y-2 font-semibold">
+            <Link className="hover:text-[var(--trust-dark)]" href="/privacy">Privacy</Link>
+            <Link className="hover:text-[var(--trust-dark)]" href="/refund">Refunds</Link>
+            <Link className="hover:text-[var(--trust-dark)]" href="/terms">Terms</Link>
+            <Link className="hover:text-[var(--trust-dark)]" href="/contact">Contact</Link>
+          </nav>
+        </div>
       </div>
     </footer>
   );

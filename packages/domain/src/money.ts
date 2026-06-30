@@ -1,7 +1,7 @@
 import type { PaymentStatus } from "./types";
 
 export function formatMoney(amount: number) {
-  return `Rs ${new Intl.NumberFormat("en-IN", {
+  return `₹${new Intl.NumberFormat("en-IN", {
     maximumFractionDigits: amount % 1 === 0 ? 0 : 2,
   }).format(amount)}`;
 }
