@@ -1,8 +1,16 @@
 import { businessProfile, faqs, getBusinessWhatsappLink } from "@wdsc/domain";
 import { Mail, MessageCircle, Phone, Timer } from "lucide-react";
+import type { Metadata } from "next";
 import { ActionButton } from "@/components/marketing/action-button";
 import { FaqList } from "@/components/marketing/faq-list";
 import { PageHero } from "@/components/marketing/page-hero";
+
+export const metadata: Metadata = {
+  title: "Contact — WhatsApp Support for Forms & Documents",
+  description:
+    "Reach Swift Digital Seva on WhatsApp for online form filling, document and PDF help. Fast replies, Mon–Sat 9 AM–8 PM, remote service across India.",
+  alternates: { canonical: "/contact" },
+};
 
 export default function ContactPage() {
   return (

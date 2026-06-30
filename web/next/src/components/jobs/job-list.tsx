@@ -54,7 +54,7 @@ export function JobList({ category, jobs, index = 0 }: { category: JobCategory; 
         )}
       </ul>
       <Link
-        href={`/sarkari-result?category=${category}`}
+        href={`/sarkari-result#${category}`}
         className="focus-ring mt-auto inline-flex items-center justify-center gap-1.5 border-t border-[var(--line)] bg-slate-50 px-4 py-3 text-sm font-bold text-[var(--trust-dark)] transition hover:bg-blue-50"
       >
         View all {jobCategoryLabels[category]}

@@ -6,6 +6,14 @@ import { PageHero } from "@/components/marketing/page-hero";
 import { PricingCard } from "@/components/marketing/pricing-card";
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { ServiceCta } from "@/components/marketing/service-cta";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Pricing — Clear Rates & Money-Saving Bundles",
+  description:
+    "Simple, transparent pricing for form filling, PDF and document work. Save with bundles like Form Combo (₹249) and Document Pack (₹99). Price confirmed before any work starts.",
+  alternates: { canonical: "/pricing" },
+};
 
 export default function PricingPage() {
   return (

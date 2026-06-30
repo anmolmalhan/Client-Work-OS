@@ -1,8 +1,16 @@
 import { faqs, getBusinessWhatsappLink } from "@wdsc/domain";
 import { MessageCircle } from "lucide-react";
+import type { Metadata } from "next";
 import { ActionButton } from "@/components/marketing/action-button";
 import { FaqList } from "@/components/marketing/faq-list";
 import { PageHero } from "@/components/marketing/page-hero";
+
+export const metadata: Metadata = {
+  title: "FAQ — Document Safety, Pricing & How It Works",
+  description:
+    "Answers about sending documents safely, how pricing and delivery proof work, and whether you need to visit in person. Remote digital service on WhatsApp.",
+  alternates: { canonical: "/faq" },
+};
 
 const faqSchema = {
   "@context": "https://schema.org",

@@ -12,6 +12,16 @@ const nextConfig: NextConfig = {
       { source: "/api/auth/:path*", destination: `${apiOrigin}/api/auth/:path*` },
     ];
   },
+  async redirects() {
+    // Common alternate URLs people type or link to -> canonical pages.
+    return [
+      { source: "/refunds", destination: "/refund", permanent: true },
+      { source: "/refund-policy", destination: "/refund", permanent: true },
+      { source: "/privacy-policy", destination: "/privacy", permanent: true },
+      { source: "/terms-of-service", destination: "/terms", permanent: true },
+      { source: "/sarkari-results", destination: "/sarkari-result", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

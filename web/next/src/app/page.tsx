@@ -20,9 +20,16 @@ import { JobCard } from "@/components/jobs/job-card";
 import { ActionButton } from "@/components/marketing/action-button";
 import { FaqList } from "@/components/marketing/faq-list";
 import { PricingCard } from "@/components/marketing/pricing-card";
+import type { Metadata } from "next";
 import { SectionHeading } from "@/components/marketing/section-heading";
 import { ServiceCard } from "@/components/marketing/service-card";
 import { Testimonials, TrustStats } from "@/components/marketing/trust-block";
+
+export const metadata: Metadata = {
+  description:
+    "Swift Digital Seva fills online forms, handles documents and PDFs, and tracks Sarkari Result updates — all on WhatsApp. Price confirmed first, proof on delivery.",
+  alternates: { canonical: "/" },
+};
 
 const trustBadges = [
   { icon: IndianRupee, title: "Price clear first", text: "Amount is confirmed before final work starts." },
