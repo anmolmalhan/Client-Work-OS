@@ -37,7 +37,7 @@ const jobImportantDateSchema = z.object({
 
 const optionalUrl = z.string().url().optional().or(z.literal(""));
 
-export const createJobPostSchema = z.object({
+const jobPostBaseSchema = z.object({
   title: z.string().trim().min(4),
   organization: z.string().trim().min(2),
   category: z.enum(jobCategories),
@@ -58,7 +58,15 @@ export const createJobPostSchema = z.object({
   isFeatured: z.boolean().default(false),
 });
 
-export const updateJobPostSchema = createJobPostSchema.partial();
+// ISO date strings (YYYY-MM-DD) compare correctly with <=, so reject a window
+// where the apply start date falls after the apply end date.
+const hasValidApplyWindow = (data: { applyStartDate?: string; applyEndDate?: string }) =>
+  !data.applyStartDate || !data.applyEndDate || data.applyStartDate <= data.applyEndDate;
+const applyWindowIssue = { message: "Apply start date must be on or before the end date.", path: ["applyEndDate"] };
+
+export const createJobPostSchema = jobPostBaseSchema.refine(hasValidApplyWindow, applyWindowIssue);
+
+export const updateJobPostSchema = jobPostBaseSchema.partial().refine(hasValidApplyWindow, applyWindowIssue);
 
 export const jobPostFilterSchema = z.object({
   category: z.enum(jobCategories).optional(),

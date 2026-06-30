@@ -1,6 +1,7 @@
 import { formatMoney, getRequestWhatsappLink, paymentStatusLabels, requestStatusLabels, type ClientRequest, type RequestStatus } from "@wdsc/domain";
-import { CalendarClock, CheckCircle2, FileCheck2, FileUp, IndianRupee, MessageCircle, Phone, ShieldCheck, StickyNote, UploadCloud } from "lucide-react";
+import { CalendarClock, CheckCircle2, FileCheck2, FileUp, IndianRupee, MessageCircle, Phone, ShieldCheck, StickyNote } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { RequestActions } from "@/components/admin/request-actions";
 import { DemoBlur } from "@/components/admin/demo-blur";
 import { ActionButton } from "@/components/marketing/action-button";
 import { PaymentBadge, StatusBadge } from "@/components/marketing/status-badge";
@@ -104,38 +105,8 @@ export function RequestDetail({ request }: { request: ClientRequest }) {
       <aside className="space-y-5">
         <section className="color-strip rounded-lg border border-[var(--line)] bg-white p-5 pt-6 shadow-sm">
           <h2 className="text-lg font-bold">Admin actions</h2>
-          <div className="mt-4 grid gap-3">
-            <label className="grid gap-2 text-sm font-semibold">
-              Update request status
-              <select className="focus-ring min-h-11 rounded-md border border-[var(--line)] bg-white px-3" defaultValue={request.status}>
-                {Object.entries(requestStatusLabels).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="grid gap-2 text-sm font-semibold">
-              Payment status
-              <select className="focus-ring min-h-11 rounded-md border border-[var(--line)] bg-white px-3" defaultValue={request.payment.status}>
-                {Object.entries(paymentStatusLabels).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="grid gap-2 text-sm font-semibold">
-              Add service price
-              <input className="focus-ring min-h-11 rounded-md border border-[var(--line)] bg-white px-3" defaultValue={request.payment.totalAmount} inputMode="numeric" />
-            </label>
-            <label className="grid gap-2 text-sm font-semibold">
-              Upload delivery proof
-              <span className="flex min-h-11 items-center gap-2 rounded-md border border-dashed border-blue-200 bg-blue-50 px-3 text-sm text-[var(--muted)]">
-                <UploadCloud className="size-5" aria-hidden="true" />
-                <input className="w-full text-sm" type="file" />
-              </span>
-            </label>
+          <RequestActions request={request} />
+          <div className="mt-3">
             <ActionButton href={getRequestWhatsappLink(request)} icon={MessageCircle} variant="whatsapp" external>
               Send WhatsApp Update
             </ActionButton>
@@ -145,22 +116,19 @@ export function RequestDetail({ request }: { request: ClientRequest }) {
         <section className="rounded-lg border border-[var(--line)] bg-white p-5 shadow-sm">
           <h2 className="flex items-center gap-2 text-lg font-bold">
             <StickyNote className="size-5" aria-hidden="true" />
-            Admin notes
+            Notes &amp; updates
           </h2>
-          <div className="mt-3 space-y-2">
-            {request.adminNotes.map((note) => (
-              <p className="rounded-md border border-[var(--line)] bg-slate-50 p-3 text-sm text-[var(--muted)]" key={note}>
-                {note}
-              </p>
-            ))}
-          </div>
-          <textarea className="focus-ring mt-3 min-h-24 w-full rounded-md border border-[var(--line)] bg-white px-3 py-3 text-sm" placeholder="Add internal note" />
-        </section>
-
-        <section className="rounded-lg border border-[var(--line)] bg-white p-5 shadow-sm">
-          <h2 className="text-lg font-bold">Client-visible note</h2>
-          <textarea className="focus-ring mt-3 min-h-24 w-full rounded-md border border-[var(--line)] bg-white px-3 py-3 text-sm" defaultValue={request.latestUpdate} />
-          <p className="mt-2 text-xs font-semibold text-[var(--muted)]">This note should be safe for the client to read on the tracking page or WhatsApp update.</p>
+          {request.adminNotes.length > 0 ? (
+            <div className="mt-3 space-y-2">
+              {request.adminNotes.map((note) => (
+                <p className="rounded-md border border-[var(--line)] bg-slate-50 p-3 text-sm text-[var(--muted)]" key={note}>
+                  {note}
+                </p>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-3 text-sm text-[var(--muted)]">No notes yet. Add one above when you update the status.</p>
+          )}
         </section>
 
         <section className="rounded-lg border border-blue-100 bg-blue-50 p-5 shadow-sm">

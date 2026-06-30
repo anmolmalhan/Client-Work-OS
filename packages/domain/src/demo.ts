@@ -395,11 +395,6 @@ export function getRequestByRequestId(requestId: string) {
   return requests.find((request) => request.requestId === requestId);
 }
 
-export function trackRequest(requestId: string, whatsappNumber: string) {
-  const digits = whatsappNumber.replace(/\D/g, "");
-  return requests.find((request) => request.requestId.toLowerCase() === requestId.toLowerCase() && request.whatsappNumber.endsWith(digits.slice(-10)));
-}
-
 export function getBusinessWhatsappLink(message = buildNewRequestMessage(businessProfile)) {
   return buildWhatsappLink(businessProfile.whatsappNumber, message);
 }

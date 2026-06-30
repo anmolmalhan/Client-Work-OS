@@ -24,6 +24,9 @@ export function SubmitRequestForm() {
 
   const mutation = useMutation({
     mutationFn: async () => {
+      if (!consent) {
+        throw new Error("Please confirm the consent checkbox before submitting.");
+      }
       const response = await rpc.requests.$post({
         json: {
           fullName: name,
@@ -93,7 +96,7 @@ export function SubmitRequestForm() {
           ))}
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 section-fade" key={step}>
           {step === 0 ? (
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="grid gap-2 text-sm font-semibold">
@@ -205,7 +208,7 @@ export function SubmitRequestForm() {
               ) : null}
               {mutation.isError ? (
                 <p className="rounded-md bg-amber-50 p-3 text-sm font-semibold text-amber-900">
-                  {(mutation.error as Error).message}{" "}
+                  {mutation.error instanceof Error ? mutation.error.message : "Could not submit the request."}{" "}
                   <a className="underline" href={whatsappLink} target="_blank" rel="noreferrer">
                     Send on WhatsApp instead
                   </a>

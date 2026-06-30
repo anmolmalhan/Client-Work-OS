@@ -180,6 +180,34 @@ details[open] .faq-panel {
   }
 }
 
+/* Gentle float for highlight badges (e.g. "Most popular"). */
+.badge-pop {
+  animation: badge-pop 2.6s ease-in-out infinite;
+}
+
+@keyframes badge-pop {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+/* Respect users who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ---- Bold & modern utilities ---- */
 .gradient-hero {
   background:

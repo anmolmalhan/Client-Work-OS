@@ -78,7 +78,7 @@ export function TrackRequestForm() {
         {mutation.isPending ? (
           <p className="text-sm text-[var(--muted)]">Checking your request status…</p>
         ) : mutation.isError ? (
-          <p className="rounded-md bg-amber-50 p-3 text-sm font-semibold text-amber-900">{(mutation.error as Error).message}</p>
+          <p className="rounded-md bg-amber-50 p-3 text-sm font-semibold text-amber-900">{mutation.error instanceof Error ? mutation.error.message : "Could not check status right now."}</p>
         ) : mutation.data === null ? (
           <p className="rounded-md bg-amber-50 p-3 text-sm font-semibold text-amber-900">
             No request found. Please check the Request ID and WhatsApp number, or contact us on WhatsApp.

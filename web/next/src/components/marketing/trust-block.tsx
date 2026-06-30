@@ -21,8 +21,12 @@ export function TrustStats() {
   ];
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-      {stats.map((stat) => (
-        <div className="rounded-xl border border-[var(--line)] bg-white p-4 text-center shadow-sm" key={stat.label}>
+      {stats.map((stat, index) => (
+        <div
+          className="soft-card stagger-card rounded-xl border border-[var(--line)] bg-white p-4 text-center shadow-sm"
+          key={stat.label}
+          style={{ animationDelay: `${index * 90}ms` }}
+        >
           <stat.icon className="mx-auto size-5 text-[var(--trust)]" aria-hidden="true" />
           <p className="mt-2 text-xl font-black text-[var(--navy)]">{stat.value}</p>
           <p className="mt-0.5 text-xs font-semibold text-[var(--muted)]">{stat.label}</p>
@@ -43,8 +47,9 @@ export function Testimonials() {
         </div>
       </div>
       <div className="mt-8 grid gap-4 md:grid-cols-3">
-        {testimonials.map((item) => (
-          <figure className="soft-card flex h-full flex-col rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm" key={item.name}>
+        {testimonials.map((item, index) => (
+          <figure className="soft-card stagger-card flex h-full flex-col rounded-2xl border border-[var(--line)] bg-white p-5 shadow-sm" key={item.name} style={{ animationDelay: `${index * 110}ms` }}>
+
             <Stars rating={item.rating} />
             <blockquote className="mt-3 flex-1 text-sm leading-6 text-[var(--foreground)]">“{item.quote}”</blockquote>
             <figcaption className="mt-4 flex items-center gap-3 border-t border-[var(--line)] pt-3">

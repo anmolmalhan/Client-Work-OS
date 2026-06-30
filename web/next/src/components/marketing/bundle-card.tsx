@@ -16,7 +16,7 @@ export function BundleCard({ bundle }: { bundle: ServiceBundle }) {
       }`}
     >
       {bundle.featured ? (
-        <span className="absolute -top-3 left-5 rounded-full bg-[var(--trust)] px-3 py-1 text-xs font-bold text-white shadow-sm">Most popular</span>
+        <span className="badge-pop absolute -top-3 left-5 rounded-full bg-[var(--trust)] px-3 py-1 text-xs font-bold text-white shadow-sm">Most popular</span>
       ) : null}
       <p className="text-xs font-bold uppercase text-[var(--trust-dark)]">{bundle.tagline}</p>
       <h3 className="mt-1 text-lg font-bold">{bundle.name}</h3>
