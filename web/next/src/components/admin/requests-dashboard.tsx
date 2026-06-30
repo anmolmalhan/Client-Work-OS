@@ -29,7 +29,7 @@ export function RequestsDashboard() {
       <div className="mt-8">
         {isError ? (
           <p className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-900">
-            Could not load requests. Make sure the API is reachable on port 4100.
+            Could not load requests right now. Please reload the page, or check your connection and sign in again.
           </p>
         ) : (
           <RequestTable requests={data?.requests} loading={isLoading} />

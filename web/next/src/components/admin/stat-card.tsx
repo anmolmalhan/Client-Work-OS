@@ -6,10 +6,10 @@ type StatCardProps = {
 };
 
 const toneStyles = {
-  mint: "border-blue-100 bg-blue-50",
+  mint: "border-emerald-100 bg-emerald-50",
   sun: "border-amber-100 bg-amber-50",
   sky: "border-blue-100 bg-blue-50",
-  coral: "border-slate-200 bg-slate-50",
+  coral: "border-rose-100 bg-rose-50",
 };
 
 export function StatCard({ label, value, helper, tone = "mint" }: StatCardProps) {
