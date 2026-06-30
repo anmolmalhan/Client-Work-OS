@@ -12,11 +12,32 @@ export const metadata: Metadata = {
   alternates: { canonical: "/sarkari-result" },
 };
 
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3100";
+
 export default async function SarkariResultPage() {
   // No searchParams here, so the page is statically generated and ISR-cached
   // (revalidate above). Search + category filtering run client-side in the
   // explorer over the pre-loaded listings.
   const [allJobs, grouped] = await Promise.all([fetchJobs(), fetchJobsGroupedByCategory()]);
 
-  return <SarkariExplorer allJobs={allJobs} grouped={grouped} />;
+  // ItemList of the listings so Google understands the page is a list and can
+  // surface the individual JobPosting detail pages.
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Latest Sarkari Result jobs, forms, results and admit cards",
+    itemListElement: allJobs.slice(0, 30).map((job, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: `${siteUrl}/sarkari-result/${job.slug}`,
+      name: job.title,
+    })),
+  };
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
+      <SarkariExplorer allJobs={allJobs} grouped={grouped} />
+    </>
+  );
 }

@@ -1,7 +1,5 @@
 import type { NextConfig } from "next";
 
-// Web + API are both connected to GitHub for auto-deploy on push to main.
-
 // Proxy the Hono API through the web domain so the browser only ever talks to
 // one origin. This keeps the Better Auth session cookie first-party (works in
 // every browser, no third-party-cookie blocking) and avoids cross-origin CORS.

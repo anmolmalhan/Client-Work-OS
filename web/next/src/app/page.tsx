@@ -46,13 +46,26 @@ const steps = [
 
 const progressItems = ["Received", "Checked", "In progress", "Delivered"];
 const popularServices = services.slice(0, 6);
+const homeFaqs = faqs.slice(0, 5);
 const latestForms = getPublishedJobPosts()
   .filter((job) => job.category === "latest_job")
   .slice(0, 3);
 
+// FAQPage schema for the homepage FAQ section (matches the questions shown).
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: homeFaqs.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: { "@type": "Answer", text: item.answer },
+  })),
+};
+
 export default function HomePage() {
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <section className="sunny-panel border-b border-[var(--line)]">
         <div className="page-shell grid items-center gap-8 py-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-10 lg:py-14">
           <div className="section-fade">
@@ -261,7 +274,7 @@ export default function HomePage() {
         <div className="page-shell section-fade">
           <SectionHeading title="Questions before sending documents" description="Short answers for clients who want the process to feel safe and clear." />
           <div className="mt-8">
-            <FaqList items={faqs.slice(0, 5)} />
+            <FaqList items={homeFaqs} />
           </div>
         </div>
       </section>

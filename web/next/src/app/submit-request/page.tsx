@@ -1,8 +1,16 @@
 import { getBusinessWhatsappLink } from "@wdsc/domain";
 import { MessageCircle } from "lucide-react";
+import type { Metadata } from "next";
 import { SubmitRequestForm } from "@/components/forms/submit-request-form";
 import { ActionButton } from "@/components/marketing/action-button";
 import { PageHero } from "@/components/marketing/page-hero";
+
+export const metadata: Metadata = {
+  title: "Submit a Request — Get Your Form or Document Done",
+  description:
+    "Share your work details to get an online form filled, documents handled, or PDFs processed. Price confirmed first, then continue on WhatsApp. Same-day help available.",
+  alternates: { canonical: "/submit-request" },
+};
 
 export default function SubmitRequestPage() {
   return (
