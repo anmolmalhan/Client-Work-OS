@@ -185,6 +185,8 @@ export const trustMetrics: TrustMetrics = {
   rating: 4.8,
   reviews: 200,
   avgReplyMinutes: 10,
+  periodLabel: "in the last 12 months",
+  ratingSource: "verified on WhatsApp",
 };
 
 // ⚠️ SAMPLE testimonials for layout only — swap for genuine reviews + screenshots before launch.

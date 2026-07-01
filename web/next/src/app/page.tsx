@@ -2,23 +2,20 @@ import { businessProfile, faqs, getBusinessWhatsappLink, getPublishedJobPosts, p
 import {
   ArrowRight,
   BadgeCheck,
-  CheckCircle2,
-  ClipboardCheck,
   Clock3,
   FileCheck2,
   IndianRupee,
   LockKeyhole,
   MessageCircle,
   ReceiptText,
-  SearchCheck,
   ShieldCheck,
   UploadCloud,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { JobCard } from "@/components/jobs/job-card";
 import { ActionButton } from "@/components/marketing/action-button";
 import { FaqList } from "@/components/marketing/faq-list";
+import { HeroChat } from "@/components/marketing/hero-chat";
 import { PricingCard } from "@/components/marketing/pricing-card";
 import type { Metadata } from "next";
 import { SectionHeading } from "@/components/marketing/section-heading";
@@ -67,31 +64,23 @@ export default function HomePage() {
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <section className="sunny-panel border-b border-[var(--line)]">
-        <div className="page-shell grid items-center gap-8 py-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-10 lg:py-14">
+        <div className="page-shell grid items-center gap-10 py-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12 lg:py-16">
           <div className="section-fade">
-            <p className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white px-3 py-1 text-sm font-bold text-[var(--trust-dark)] shadow-sm">
+            <p className="inline-flex items-center gap-2 rounded-full border border-[var(--primary-100)] bg-white px-3 py-1 text-sm font-bold text-[var(--trust-dark)] shadow-sm">
               <span className="inline-block size-2 animate-pulse rounded-full bg-[var(--whatsapp)]" aria-hidden="true" />
-              WhatsApp-first digital service center
+              Works on any phone — no app needed
             </p>
-            <h1 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight text-[var(--navy)] sm:text-5xl">
-              Online form, document and PDF work <span className="gradient-text">without confusion.</span>
+            <h1 className="mt-5 text-4xl font-black leading-[1.06] tracking-tight text-[var(--navy)] sm:text-[3.25rem] sm:leading-[1.05]">
+              Government forms filled in <span className="gradient-text">15 minutes</span> — on WhatsApp.
             </h1>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-[var(--muted)] sm:mt-5 sm:text-lg sm:leading-8">
-              {businessProfile.name} helps clients submit forms, upload documents, convert PDFs, check application status, and receive clear proof through WhatsApp.
+            <p className="mt-4 max-w-xl text-lg font-semibold text-[var(--foreground)] sm:text-xl">
+              From ₹49. Proof on delivery.
             </p>
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" external>
-                Start on WhatsApp
-              </ActionButton>
-              <div className="hidden sm:block">
-                <ActionButton href="/submit-request" icon={ClipboardCheck}>
-                  Submit Request
-                </ActionButton>
-              </div>
-              <ActionButton href="/track-request" icon={SearchCheck} variant="secondary">
-                Track Request
-              </ActionButton>
-            </div>
+            <p className="mt-2 max-w-xl text-base leading-7 text-[var(--muted)]">
+              {businessProfile.name} fills forms, fixes photo &amp; signature sizes, and checks application status — you just chat. No portal logins, no confusion.
+            </p>
+
+            {/* Reassure BEFORE the click: trust badges sit above the CTA. */}
             <div className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
               {trustBadges.map((item) => (
                 <div className="rounded-lg border border-[var(--line)] bg-white p-2 shadow-sm sm:p-3" key={item.title}>
@@ -101,24 +90,36 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-          </div>
-          <div className="section-fade overflow-hidden rounded-lg border border-[var(--line)] bg-white shadow-[0_24px_60px_rgba(15,23,42,0.12)]" style={{ animationDelay: "90ms" }}>
-            <Image
-              src="/images/digital-service-hero.png"
-              alt="Remote digital document support through a phone and laptop"
-              width={1280}
-              height={720}
-              className="aspect-[16/10] h-full w-full object-cover object-[70%_center]"
-              priority
-            />
-            <div className="grid gap-3 border-t border-[var(--line)] p-4 sm:grid-cols-3">
-              {["Documents checked", "Price confirmed", "Proof delivered"].map((label) => (
-                <div className="flex items-center gap-2 text-sm font-bold text-[var(--foreground)]" key={label}>
-                  <CheckCircle2 className="size-4 shrink-0 text-[var(--trust)]" aria-hidden="true" />
-                  {label}
-                </div>
-              ))}
+
+            {/* One dominant conversion action; everything else is a quiet link. */}
+            <div className="mt-6">
+              <ActionButton
+                href={getBusinessWhatsappLink()}
+                icon={MessageCircle}
+                variant="whatsapp"
+                size="lg"
+                className="w-full text-base sm:w-auto"
+                external
+              >
+                Start on WhatsApp — from ₹49
+              </ActionButton>
+              <p className="mt-2 text-sm font-semibold text-[var(--muted)]">Typical reply in ~10 minutes · Mon–Sat</p>
+              <p className="mt-3 text-sm text-[var(--muted)]">
+                Prefer a form?{" "}
+                <Link className="focus-ring rounded font-bold text-[var(--trust-dark)] underline underline-offset-2 hover:text-[var(--trust)]" href="/submit-request">
+                  Submit a request
+                </Link>{" "}
+                or{" "}
+                <Link className="focus-ring rounded font-bold text-[var(--trust-dark)] underline underline-offset-2 hover:text-[var(--trust)]" href="/track-request">
+                  track an existing one
+                </Link>
+                .
+              </p>
             </div>
+          </div>
+
+          <div className="section-fade" style={{ animationDelay: "90ms" }}>
+            <HeroChat />
           </div>
         </div>
       </section>
@@ -127,7 +128,7 @@ export default function HomePage() {
         <TrustStats />
       </section>
 
-      <section className="page-shell section-fade py-12">
+      <section className="page-shell section-fade section-y">
         <SectionHeading
           eyebrow="Trust first"
           title="Clients should not worry before sending documents"
@@ -148,7 +149,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-[var(--line)] bg-white py-12">
+      <section className="border-y border-[var(--line)] bg-white section-y">
         <div className="page-shell section-fade">
           <SectionHeading
             eyebrow="How it works"
@@ -170,7 +171,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="page-shell section-fade py-12">
+      <section className="page-shell section-fade section-y">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <SectionHeading title="Popular digital services" description="Start with the common work clients usually need on WhatsApp." />
           <Link className="focus-ring inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-bold text-[var(--trust-dark)] hover:bg-blue-50" href="/services">
@@ -192,7 +193,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-[var(--line)] bg-white py-12">
+      <section className="border-y border-[var(--line)] bg-white section-y">
         <div className="page-shell section-fade">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <SectionHeading
@@ -218,7 +219,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="vibrant-panel border-y border-[var(--line)] py-12">
+      <section className="vibrant-panel border-y border-[var(--line)] section-y">
         <div className="page-shell section-fade">
           <SectionHeading
             eyebrow="Pricing preview"
@@ -233,7 +234,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="page-shell section-fade py-12">
+      <section className="page-shell section-fade section-y">
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <SectionHeading
             eyebrow="Tracking preview"
@@ -266,11 +267,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="page-shell section-fade py-12">
+      <section className="page-shell section-fade section-y">
         <Testimonials />
       </section>
 
-      <section className="border-y border-[var(--line)] bg-white py-12">
+      <section className="border-y border-[var(--line)] bg-white section-y">
         <div className="page-shell section-fade">
           <SectionHeading title="Questions before sending documents" description="Short answers for clients who want the process to feel safe and clear." />
           <div className="mt-8">
@@ -279,7 +280,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="page-shell section-fade py-12">
+      <section className="page-shell section-fade section-y">
         <div className="rounded-lg bg-[var(--navy)] p-6 text-white shadow-[0_22px_52px_rgba(15,23,42,0.2)] sm:p-8">
           <Clock3 className="size-8 text-[var(--amber)]" aria-hidden="true" />
           <h2 className="mt-4 text-2xl font-bold">Send the work once. Get clear updates till delivery.</h2>

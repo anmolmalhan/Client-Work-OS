@@ -8,6 +8,8 @@ type ActionButtonProps = {
   children: React.ReactNode;
   icon?: LucideIcon;
   variant?: "primary" | "whatsapp" | "secondary" | "ghost" | "navy";
+  size?: "default" | "lg";
+  className?: string;
   external?: boolean;
 };
 
@@ -20,7 +22,7 @@ const variantMap = {
   navy: "navy",
 } as const;
 
-export function ActionButton({ href, children, icon: Icon = ArrowRight, variant = "primary", external }: ActionButtonProps) {
+export function ActionButton({ href, children, icon: Icon = ArrowRight, variant = "primary", size = "default", className, external }: ActionButtonProps) {
   const content = (
     <>
       <Icon aria-hidden="true" className="size-4" />
@@ -29,7 +31,7 @@ export function ActionButton({ href, children, icon: Icon = ArrowRight, variant 
   );
 
   return (
-    <Button asChild variant={variantMap[variant]}>
+    <Button asChild variant={variantMap[variant]} size={size} className={className}>
       {external ? (
         <a href={href} target="_blank" rel="noreferrer">
           {content}

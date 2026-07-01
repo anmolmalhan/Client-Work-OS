@@ -2,26 +2,62 @@
 @import "tw-animate-css";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --muted: #64748b;
-  --card: #ffffff;
-  --line: #e2e8f0;
-  --navy: #0f172a;
-  --trust: #2563eb;
-  --trust-dark: #1d4ed8;
-  --whatsapp: #22c55e;
-  --whatsapp-dark: #16a34a;
-  --amber: #f59e0b;
-  --action: #2563eb;
-  --action-dark: #1d4ed8;
-  --highlight: #f59e0b;
-  --sun: #f59e0b;
-  --coral: #2563eb;
-  --sky: #2563eb;
-  --mint: #eff6ff;
-  --cream: #f8fafc;
-  --radius: 0.5rem;
+  /* ============================================================
+     Swift Digital Seva — brand color system
+     ------------------------------------------------------------
+     PRIMARY  (indigo-blue) — brand + trust: headings, links, UI accents
+     ACCENT   (WhatsApp green) — reserved for the ONE conversion action
+     HIGHLIGHT(amber) — attention only: ratings, "popular", urgency
+     NEUTRALS (slate) — text, borders, surfaces
+     Use the numbered scale for new work; the semantic aliases below
+     keep existing components on the same palette.
+     ============================================================ */
+
+  /* Primary scale */
+  --primary-50: #eef2ff;
+  --primary-100: #e0e7ff;
+  --primary-200: #c7d2fe;
+  --primary-500: #4f46e5;
+  --primary-600: #4338ca;
+  --primary-700: #3730a3;
+
+  /* Accent (conversion) scale */
+  --accent-500: #22c55e;
+  --accent-600: #16a34a;
+
+  /* Highlight scale */
+  --highlight-400: #fbbf24;
+  --highlight-500: #f59e0b;
+
+  /* Neutral scale */
+  --neutral-0: #ffffff;
+  --neutral-50: #f8fafc;
+  --neutral-100: #f1f5f9;
+  --neutral-200: #e2e8f0;
+  --neutral-500: #64748b;
+  --neutral-900: #0f172a;
+
+  /* Semantic aliases (map onto the scales above) */
+  --background: var(--neutral-50);
+  --foreground: var(--neutral-900);
+  --muted: var(--neutral-500);
+  --card: var(--neutral-0);
+  --line: var(--neutral-200);
+  --navy: var(--neutral-900);
+  --trust: var(--primary-500);
+  --trust-dark: var(--primary-600);
+  --whatsapp: var(--accent-500);
+  --whatsapp-dark: var(--accent-600);
+  --amber: var(--highlight-500);
+  --action: var(--primary-500);
+  --action-dark: var(--primary-600);
+  --highlight: var(--highlight-500);
+  --sun: var(--highlight-500);
+  --coral: var(--primary-500);
+  --sky: var(--primary-500);
+  --mint: var(--primary-50);
+  --cream: var(--neutral-50);
+  --radius: 0.625rem;
 }
 
 /* shadcn/ui design tokens mapped onto the Swift Digital Seva brand palette,
@@ -88,6 +124,18 @@ textarea {
   margin: 0 auto;
 }
 
+/* Consistent vertical rhythm between homepage/marketing sections so blocks get
+   even breathing room instead of ad-hoc py-* values. */
+.section-y {
+  padding-block: 3.5rem;
+}
+
+@media (min-width: 640px) {
+  .section-y {
+    padding-block: 5rem;
+  }
+}
+
 .focus-ring {
   outline: 2px solid transparent;
   outline-offset: 3px;
@@ -134,7 +182,7 @@ textarea {
 }
 
 .soft-card:hover {
-  border-color: rgba(37, 99, 235, 0.35);
+  border-color: rgba(79, 70, 229, 0.35);
   box-shadow: 0 18px 42px rgba(15, 23, 42, 0.09);
   transform: translateY(-2px);
 }

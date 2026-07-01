@@ -60,6 +60,9 @@ export type TrustMetrics = {
   rating: number;
   reviews: number;
   avgReplyMinutes: number;
+  // Context so the numbers read as specific/verifiable, not vanity metrics.
+  periodLabel: string; // timeframe the counts cover, e.g. "in the last 12 months"
+  ratingSource: string; // where the rating comes from, e.g. "verified on WhatsApp"
 };
 
 export type UploadedDocument = {

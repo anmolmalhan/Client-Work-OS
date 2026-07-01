@@ -14,10 +14,10 @@ function Stars({ rating }: { rating: number }) {
 
 export function TrustStats() {
   const stats = [
-    { icon: FileCheck2, value: `${trustMetrics.formsCompleted.toLocaleString("en-IN")}+`, label: "Forms completed" },
-    { icon: Star, value: `${trustMetrics.rating}★`, label: `From ${trustMetrics.reviews}+ users` },
-    { icon: Clock3, value: `~${trustMetrics.avgReplyMinutes} min`, label: "Avg WhatsApp reply" },
-    { icon: ShieldCheck, value: "24 hrs", label: "Documents deleted after" },
+    { icon: FileCheck2, value: `${trustMetrics.formsCompleted.toLocaleString("en-IN")}+`, label: "Forms completed", helper: trustMetrics.periodLabel },
+    { icon: Star, value: `${trustMetrics.rating}★`, label: `From ${trustMetrics.reviews}+ reviews`, helper: trustMetrics.ratingSource },
+    { icon: Clock3, value: `~${trustMetrics.avgReplyMinutes} min`, label: "Avg WhatsApp reply", helper: "Mon–Sat, 9am–8pm" },
+    { icon: ShieldCheck, value: "24 hrs", label: "Documents deleted after", helper: "Files never reused" },
   ];
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -30,6 +30,7 @@ export function TrustStats() {
           <stat.icon className="mx-auto size-5 text-[var(--trust)]" aria-hidden="true" />
           <p className="mt-2 text-xl font-black text-[var(--navy)]">{stat.value}</p>
           <p className="mt-0.5 text-xs font-semibold text-[var(--muted)]">{stat.label}</p>
+          <p className="mt-1 text-[11px] font-medium leading-4 text-[var(--muted)]">{stat.helper}</p>
         </div>
       ))}
     </div>
@@ -43,7 +44,7 @@ export function Testimonials() {
         <SectionHeading eyebrow="Reviews" title="What people say after we help" />
         <div className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm font-bold text-amber-900">
           <Stars rating={trustMetrics.rating} />
-          {trustMetrics.rating} from {trustMetrics.reviews}+ users
+          {trustMetrics.rating} from {trustMetrics.reviews}+ reviews · {trustMetrics.ratingSource}
         </div>
       </div>
       <div className="mt-8 grid gap-4 md:grid-cols-3">
