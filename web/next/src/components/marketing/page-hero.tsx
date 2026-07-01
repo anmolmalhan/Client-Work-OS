@@ -1,16 +1,22 @@
-import { Sparkles } from "lucide-react";
+import { CheckCircle2, Sparkles } from "lucide-react";
 
 type PageHeroProps = {
   eyebrow: string;
   title: string;
   highlight?: string;
   description?: string;
+  // Short reassurances rendered as chips ABOVE the CTA so visitors are
+  // reassured before the click. Keep to ~3 tight phrases.
+  trustSignals?: string[];
   children?: React.ReactNode;
 };
 
 // Full-bleed gradient hero used across the marketing pages for a consistent
-// bold & modern look. Pass a CTA via children.
-export function PageHero({ eyebrow, title, highlight, description, children }: PageHeroProps) {
+// bold & modern look. Pass the single dominant CTA via children, and optional
+// trust signals via trustSignals (shown just above the CTA).
+export function PageHero({ eyebrow, title, highlight, description, trustSignals, children }: PageHeroProps) {
+  const hasAside = Boolean(trustSignals?.length) || Boolean(children);
+
   return (
     <section className="gradient-hero relative overflow-hidden">
       <Sparkles className="pointer-events-none absolute right-8 top-8 size-28 text-white/10" aria-hidden="true" />
@@ -31,7 +37,24 @@ export function PageHero({ eyebrow, title, highlight, description, children }: P
           </h1>
           {description ? <p className="mt-4 max-w-2xl text-base leading-7 text-blue-100/90">{description}</p> : null}
         </div>
-        {children ? <div className="shrink-0">{children}</div> : null}
+        {hasAside ? (
+          <div className="shrink-0 lg:text-right">
+            {trustSignals?.length ? (
+              <ul className="mb-4 flex flex-wrap gap-2 lg:justify-end">
+                {trustSignals.map((signal) => (
+                  <li
+                    key={signal}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold text-white backdrop-blur"
+                  >
+                    <CheckCircle2 className="size-3.5 text-[var(--amber)]" aria-hidden="true" />
+                    {signal}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            {children}
+          </div>
+        ) : null}
       </div>
     </section>
   );

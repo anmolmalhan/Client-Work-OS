@@ -17,11 +17,12 @@ export default function SubmitRequestPage() {
     <div>
       <PageHero
         eyebrow="Submit request"
-        title="Share your work details and"
-        highlight="documents"
+        title="Send your work once —"
+        highlight="get proof on delivery"
         description="Use the form for organized details, then continue on WhatsApp for document clarification, payment, and delivery."
+        trustSignals={["Price confirmed before work", "Documents kept private", "Proof on delivery"]}
       >
-        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" external>
+        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" size="lg" className="w-full text-base sm:w-auto" external>
           Send Directly on WhatsApp
         </ActionButton>
       </PageHero>

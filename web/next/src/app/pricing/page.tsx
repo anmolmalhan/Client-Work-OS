@@ -20,11 +20,12 @@ export default function PricingPage() {
     <div>
       <PageHero
         eyebrow="Pricing"
-        title="Simple pricing, confirmed after we check your"
-        highlight="documents"
+        title="Clear prices. No advance."
+        highlight="Pay after we confirm."
         description="Fixed services have direct prices. Forms, submissions, account support, and urgent work are quoted after checking complexity."
+        trustSignals={["Fixed prices shown upfront", "No advance payment", "Pay after we confirm"]}
       >
-        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" external>
+        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" size="lg" className="w-full text-base sm:w-auto" external>
           Confirm Price on WhatsApp
         </ActionButton>
       </PageHero>

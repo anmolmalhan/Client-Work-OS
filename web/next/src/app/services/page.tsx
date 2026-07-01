@@ -35,11 +35,12 @@ export default function ServicesPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }} />
       <PageHero
         eyebrow="Digital services"
-        title="Everything clients can request"
-        highlight="remotely"
+        title="Every digital task, done on WhatsApp —"
+        highlight="from ₹49"
         description="Only digital and online support services are offered. Printing, lamination, photocopying, and public PC usage are intentionally excluded."
+        trustSignals={["From ₹49", "Done remotely on WhatsApp", "Proof on delivery"]}
       >
-        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" external>
+        <ActionButton href={getBusinessWhatsappLink()} icon={MessageCircle} variant="whatsapp" size="lg" className="w-full text-base sm:w-auto" external>
           Send on WhatsApp
         </ActionButton>
       </PageHero>
