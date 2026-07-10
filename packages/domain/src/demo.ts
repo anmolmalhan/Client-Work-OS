@@ -41,7 +41,7 @@ export const services: ServiceItem[] = [
     category: "documents",
     description: "Upload documents to online portals after checking size, type, and clarity.",
     priceType: "starting_at",
-    estimatedPrice: 99,
+    estimatedPrice: 29,
     requiredDocuments: ["Portal link", "Login details", "Documents to upload"],
   },
   {
@@ -86,7 +86,7 @@ export const services: ServiceItem[] = [
     category: "documents",
     description: "Resize photos and signatures as per application portal requirements.",
     priceType: "starting_at",
-    estimatedPrice: 79,
+    estimatedPrice: 19,
     requiredDocuments: ["Photo", "Signature", "Size instructions"],
   },
   {
@@ -104,7 +104,7 @@ export const services: ServiceItem[] = [
     category: "status_support",
     description: "Download admit cards using registration details and share PDF confirmation.",
     priceType: "starting_at",
-    estimatedPrice: 99,
+    estimatedPrice: 29,
     requiredDocuments: ["Registration number", "DOB/password", "Portal name"],
   },
   {
@@ -161,9 +161,9 @@ export const pricing: PricingCategory[] = [
     description: "Common digital work where final price depends on document count.",
     items: [
       { label: "Online form filling", price: "From ₹149" },
-      { label: "Document upload", price: "From ₹99" },
-      { label: "Admit card download", price: "From ₹99" },
-      { label: "Photo/signature resize", price: "From ₹79" },
+      { label: "Document upload", price: "From ₹29" },
+      { label: "Admit card download", price: "From ₹29" },
+      { label: "Photo/signature resize", price: "From ₹19" },
     ],
   },
   {
